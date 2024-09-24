@@ -5,6 +5,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SekertarisController;
 use App\Http\Controllers\TambahAnggotaController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\BendaharaController;
+use App\Http\Controllers\TambahDataPenggunaController;
 
 // Route untuk menampilkan form login (GET)
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -24,6 +26,12 @@ Route::middleware(['auth', 'role:sekertaris'])->group(function () {
     Route::get('/anggota/{id}/edit', [TambahAnggotaController::class, 'edit'])->name('anggota.edit');
     Route::put('/anggota/{id}', [TambahAnggotaController::class, 'update'])->name('anggota.update');
     Route::delete('/anggota/{id}', [TambahAnggotaController::class, 'destroy'])->name('anggota.destroy');
+});
+
+// Route untuk role 'bendahara'
+Route::middleware(['auth', 'role:bendahara'])->group(function () {
+    Route::get('/bendahara/dashboard', [BendaharaController::class, 'index'])->name('bendahara.dashboard');
+    Route::get('/bendahara/data-pengguna', [TambahDataPenggunaController::class, 'DataPengguna'])->name('bendahara.DataPengguna');
 });
 
 // Route untuk role 'anggota'
