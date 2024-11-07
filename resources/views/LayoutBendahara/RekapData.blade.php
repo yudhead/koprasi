@@ -13,7 +13,7 @@
      {{ session('success') }}
  </div>
  @endif
-
+<h2>Data Rekap</h2>
 <!-- Ubah tombol agar diarahkan ke route untuk tambah rekap -->
 <button class="btn-add" onclick="location.href='{{ route('bendahara.TambahRekap') }}'">Tambah Rekap Data</button>
 

@@ -16,7 +16,7 @@
          {{ session('success') }}
      </div>
      @endif
-    
+    <h2>Data Pengguna</h2>
     <button class="btn-add" onclick="location.href='{{ route('bendahara.tambahPengguna') }}'">Tambah Data Pengguna</button>
 
     <table>

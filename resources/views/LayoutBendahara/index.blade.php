@@ -5,9 +5,12 @@
     <title>Kopsadar Makmur Sejahtera (SMS)</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/layoutBendahara.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -20,19 +23,19 @@
             @endif
             <li><a href="{{ route('bendahara.DataPengguna') }}"><i class="fa fa-credit-card"></i>Data Pengguna</a></li>
             <li><a href="{{ route('bendahara.RekapData') }}"><i class="fa fa-credit-card"></i>Rekap Data</a></li>
-            <li><a href="#"><i class="fa fa-file"></i>Peminjaman</a></li>
-            <li><a href="#"><i class="fa fa-check"></i>Laporan</a></li>
-            <li><a href="#"><i class="fa fa-check"></i>Validasi</a></li>
-            <li><a href="#"><i class="fa fa-money"></i>Pembayaran</a></li>
+            <li><a href="{{ route('bendahara.peminjaman.index') }}"><i class="fa fa-file"></i>Peminjaman</a></li>
+            <li><a href="{{ route('bendahara.laporan.index') }}"><i class="fa fa-check"></i>Laporan</a></li>
+            <li><a href="{{ route('bendahara.validasi') }}"><i class="fa fa-check"></i>Validasi</a></li>
+            <li><a href="{{ route('bendahara.pembayaran.index') }}"><i class="fa fa-money"></i>Pembayaran</a></li>
             <li><a href="#"><i class="fa fa-info"></i>Informasi</a></li>
             <li class="logout">
-                <form action="{{ route ('logout') }}" method="POST">
+                <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="logout-btn"><i class="fa fa-sign-out"></i> Logout</button>
                 </form>
             </li>
         </ul>
-    </div>
+    </div>    
     <div class="content-wrapper">
         <div id="pjax-container">
             @yield('content')

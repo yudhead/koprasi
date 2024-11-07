@@ -304,3 +304,52 @@ th {
         font-size: 14px;
     }
 }
+
+/* Gaya untuk tombol tambah peminjaman */
+.btn-tambahPeminjaman {
+    background-color: #28a745; /* Warna hijau */
+    color: white; /* Warna teks putih */
+    padding: 10px 15px; /* Padding untuk tombol */
+    border: none; /* Tidak ada border */
+    border-radius: 5px; /* Sudut membulat */
+    font-size: 16px; /* Ukuran font */
+    cursor: pointer; /* Kursor berubah saat hover */
+    transition: background-color 0.3s; /* Transisi untuk efek hover */
+}
+
+.btn-tambahPeminjaman:hover {
+    background-color: #218838; /* Warna hijau lebih gelap saat hover */
+}
+
+/* Gaya untuk tombol edit peminjaman */
+.btn-editPeminjaman {
+    background-color: #007bff; /* Warna biru */
+    color: white; /* Warna teks putih */
+    padding: 10px 15px; /* Padding untuk tombol */
+    border: none; /* Tidak ada border */
+    border-radius: 5px; /* Sudut membulat */
+    font-size: 16px; /* Ukuran font */
+    cursor: pointer; /* Kursor berubah saat hover */
+    transition: background-color 0.3s; /* Transisi untuk efek hover */
+}
+
+.btn-editPeminjaman:hover {
+    background-color: #0056b3; /* Warna biru lebih gelap saat hover */
+}
+
+/* Gaya untuk tombol hapus peminjaman */
+.btn-hapusPeminjaman {
+    background-color: #dc3545; /* Warna merah */
+    color: white; /* Warna teks putih */
+    padding: 10px 15px; /* Padding untuk tombol */
+    border: none; /* Tidak ada border */
+    border-radius: 5px; /* Sudut membulat */
+    font-size: 16px; /* Ukuran font */
+    cursor: pointer; /* Kursor berubah saat hover */
+    transition: background-color 0.3s; /* Transisi untuk efek hover */
+}
+
+.btn-hapusPeminjaman:hover {
+    background-color: #c82333; /* Warna merah lebih gelap saat hover */
+}
+
