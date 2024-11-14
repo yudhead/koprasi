@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <form action="{{ route('bendahara.updatePengguna', $pengguna->id) }}" method="POST">
+        <form action="{{ route('data-pengguna.update', $pengguna->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -49,7 +49,7 @@
             </div>
 
             <button type="submit" class="btn-add">Simpan</button>
-            <button type="button" class="btn-back" onclick="window.location='{{ route('bendahara.DataPengguna') }}'">Kembali</button>
+            <button type="button" class="btn-back" onclick="window.location='{{ route('data-pengguna.index') }}'">Kembali</button>
         </form>
     </div>
 </body>

@@ -17,7 +17,7 @@
      </div>
      @endif
     <h2>Data Pengguna</h2>
-    <button class="btn-add" onclick="location.href='{{ route('bendahara.tambahPengguna') }}'">Tambah Data Pengguna</button>
+    <button class="btn-add" onclick="location.href='{{ route('data-pengguna.create') }}'">Tambah Data Pengguna</button>
 
     <table>
         <thead>
@@ -43,10 +43,10 @@
                
                 <td>
                     <!-- Tombol Edit -->
-                    <a href="{{ route('bendahara.editPengguna', $pengguna->id) }}" class="btn-edit">Edit</a>
+                    <a href="{{ route('data-pengguna.edit', $pengguna->id) }}" class="btn-edit">Edit</a>
         
                     <!-- Form untuk Hapus -->
-                    <form id="delete-form-{{ $pengguna->id }}" action="{{ route('bendahara.hapusPengguna', $pengguna->id) }}" method="POST" style="display:inline-block;">
+                    <form id="delete-form-{{ $pengguna->id }}" action="{{ route('data-pengguna.destroy', $pengguna->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                     </form>

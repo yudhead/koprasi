@@ -42,8 +42,8 @@
                     <td>{{ $item->simpanan_wajib }}</td>
                     <td>{{ $item->simpanan_sukarela }}</td>
                     <td>
-                        <a href="{{ route('bendahara.peminjaman.edit', $item->id) }}" class="btn-editPeminjaman">Edit</a>
-                        <form action="{{ route('bendahara.peminjaman.destroy', $item->id) }}" method="POST" style="display:inline;">
+                        <a href="#" class="btn-editPeminjaman">Edit</a>
+                        <form action="#" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn-hapusPeminjaman">Hapus</button>

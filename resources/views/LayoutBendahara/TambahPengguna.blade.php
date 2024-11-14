@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <form action="{{ route('bendahara.storePengguna') }}" method="POST">
+        <form action="{{ route('data-pengguna.store') }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="nama">Nama</label>
@@ -48,7 +48,7 @@
             </div>
             
             <button type="submit" class="btn-add">Simpan</button>
-            <button type="button" class="btn-back" onclick="window.location='{{ route('bendahara.DataPengguna') }}'">Kembali</button>
+            <button type="button" class="btn-back" onclick="window.location='{{ route('data-pengguna.index') }}'">Kembali</button>
         </form>
     </div>
 </body>

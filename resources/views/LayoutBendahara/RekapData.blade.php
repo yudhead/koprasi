@@ -15,7 +15,7 @@
  @endif
 <h2>Data Rekap</h2>
 <!-- Ubah tombol agar diarahkan ke route untuk tambah rekap -->
-<button class="btn-add" onclick="location.href='{{ route('bendahara.TambahRekap') }}'">Tambah Rekap Data</button>
+<button class="btn-add" onclick="location.href='{{ route('rekap-data.create') }}'">Tambah Rekap Data</button>
 
 <table>
     <thead>
@@ -40,10 +40,10 @@
             <td>Rp.{{ number_format($data->total, 0, ',', '') }}</td>
             <td>
                 <!-- Tombol Edit -->
-                <a href="{{ route('bendahara.EditRekap', $data->id) }}" class="btn-edit">Edit</a>
+                <a href="{{ route('rekap-data.edit', $data->id) }}" class="btn-edit">Edit</a>
 
                 <!-- Form untuk Hapus -->
-                <form id="delete-form-{{ $data->id }}" action="{{ route('bendahara.hapusRekap', $data->id) }}" method="POST" style="display:inline-block;">
+                <form id="delete-form-{{ $data->id }}" action="{{ route('rekap-data.destroy', $data->id) }}" method="POST" style="display:inline-block;">
                     @csrf
                     @method('DELETE')
                     <button type="button" class="btn-delete" onclick="confirmDelete('{{ $data->id }}')">Hapus</button>

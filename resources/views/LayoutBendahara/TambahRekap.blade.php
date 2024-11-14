@@ -9,7 +9,7 @@
     <h2>Tambah Rekap Data</h2>
 
     <!-- Form Tambah Rekap Data -->
-    <form action="{{ route('bendahara.storeRekap') }}" method="POST">
+    <form action="{{ route('rekap-data.store') }}" method="POST">
         @csrf
 
         <div class="form-group">
@@ -38,7 +38,7 @@
         </div>
 
         <button type="submit" class="btn-add">Simpan Rekap</button>
-        <button type="button" class="btn-back" onclick="location.href='{{ route('bendahara.RekapData') }}'">Kembali</button>
+        <button type="button" class="btn-back" onclick="location.href='{{ route('rekap-data.index') }}'">Kembali</button>
     </form>
 
 </div>

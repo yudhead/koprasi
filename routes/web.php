@@ -30,7 +30,7 @@ use App\Http\Controllers\PembayaranWajibSekertarisController;
 use App\Http\Controllers\PembayaranSukarelaSekertarisController;
 use App\Http\Controllers\LaporanSekertarisWajibController;
 use App\Http\Controllers\LaporanSekertarisSukarelaController;
-
+use App\Http\Controllers\InformasiController;
 
 
 
@@ -72,18 +72,20 @@ Route::middleware(['auth', 'role:sekertaris'])->group(function () {
 // Route untuk role 'bendahara'
 Route::middleware(['auth', 'role:bendahara'])->group(function () {
     Route::get('/bendahara/dashboard', [BendaharaController::class, 'index'])->name('bendahara.dashboard');
-    Route::get('/bendahara/data-pengguna', [TambahDataPenggunaController::class, 'DataPengguna'])->name('bendahara.DataPengguna');
-    Route::get('bendahara/tambah-pengguna', [TambahDataPenggunaController::class, 'create'])->name('bendahara.tambahPengguna');
-    Route::post('bendahara/tambah-pengguna', [TambahDataPenggunaController::class, 'store'])->name('bendahara.storePengguna');
-    Route::get('/pengguna/{id}/edit', [TambahDataPenggunaController::class, 'edit'])->name('bendahara.editPengguna');
-    Route::delete('/pengguna/{id}', [TambahDataPenggunaController::class, 'destroy'])->name('bendahara.hapusPengguna');
-    Route::put('/bendahara/updatePengguna/{id}', [TambahDataPenggunaController::class, 'update'])->name('bendahara.updatePengguna');
-    Route::get('/bendahara/rekap-data', [RekapDataPenggunaController::class, 'RekapData'])->name('bendahara.RekapData');
-    Route::get('/bendahara/tambahRekap', [RekapDataPenggunaController::class, 'tambahRekap'])->name('bendahara.TambahRekap');
-    Route::post('/bendahara/storeRekap', [RekapDataPenggunaController::class, 'storeRekap'])->name('bendahara.storeRekap');
-    Route::get('/bendahara/rekap/edit/{id}', [RekapDataPenggunaController::class, 'editRekap'])->name('bendahara.EditRekap');
-    Route::post('/bendahara/rekap/update/{id}', [RekapDataPenggunaController::class, 'updateRekap'])->name('bendahara.updateRekap');
-    Route::delete('/bendahara/rekap/delete/{id}', [RekapDataPenggunaController::class, 'hapusRekap'])->name('bendahara.hapusRekap');
+    Route::resource('data-pengguna', TambahDataPenggunaController::class);
+    // Route::get('/bendahara/data-pengguna', [TambahDataPenggunaController::class, 'DataPengguna'])->name('bendahara.DataPengguna');
+    // Route::get('bendahara/tambah-pengguna', [TambahDataPenggunaController::class, 'create'])->name('bendahara.tambahPengguna');
+    // Route::post('bendahara/tambah-pengguna', [TambahDataPenggunaController::class, 'store'])->name('bendahara.storePengguna');
+    // Route::get('/pengguna/{id}/edit', [TambahDataPenggunaController::class, 'edit'])->name('bendahara.editPengguna');
+    // Route::delete('/pengguna/{id}', [TambahDataPenggunaController::class, 'destroy'])->name('bendahara.hapusPengguna');
+    // Route::put('/bendahara/updatePengguna/{id}', [TambahDataPenggunaController::class, 'update'])->name('bendahara.updatePengguna');
+    Route::resource('rekap-data', RekapDataPenggunaController::class);
+    // Route::get('/bendahara/rekap-data', [RekapDataPenggunaController::class, 'RekapData'])->name('bendahara.RekapData');
+    // Route::get('/bendahara/tambahRekap', [RekapDataPenggunaController::class, 'tambahRekap'])->name('bendahara.TambahRekap');
+    // Route::post('/bendahara/storeRekap', [RekapDataPenggunaController::class, 'storeRekap'])->name('bendahara.storeRekap');
+    // Route::get('/bendahara/rekap/edit/{id}', [RekapDataPenggunaController::class, 'editRekap'])->name('bendahara.EditRekap');
+    // Route::post('/bendahara/rekap/update/{id}', [RekapDataPenggunaController::class, 'updateRekap'])->name('bendahara.updateRekap');
+    // Route::delete('/bendahara/rekap/delete/{id}', [RekapDataPenggunaController::class, 'hapusRekap'])->name('bendahara.hapusRekap');
     Route::get('/bendahara/peminjaman', [PeminjamanBendaharaController::class, 'index'])->name('bendahara.peminjaman.index');
     Route::get('/bendahara/peminjaman/create', [PeminjamanBendaharaController::class, 'create'])->name('bendahara.peminjaman.create');
     Route::post('/bendahara/peminjaman/store', [PeminjamanBendaharaController::class, 'store'])->name('bendahara.peminjaman.store');
@@ -94,8 +96,9 @@ Route::middleware(['auth', 'role:bendahara'])->group(function () {
     Route::post('bendahara/pembayaran/store', [PembayaranBendaharaController::class, 'store'])->name('bendahara.pembayaran.store');
     Route::get('bendahara/laporan', [LaporanController::class, 'index'])->name('bendahara.laporan.index');
     Route::get('bendahara/validasi', [ValidasiBendaharaController::class, 'showValidationPage'])->name('bendahara.validasi');
-    Route::post('/validasi/approve/{id}', [ValidasiBendaharaController::class, 'approve']);
-    Route::post('/validasi/disapprove/{id}', [ValidasiBendaharaController::class, 'disapprove']);
+    Route::post('/validasi/approve/{id}', [ValidasiBendaharaController::class, 'approve'])->name('validasi.approve');
+    Route::post('/validasi/disapprove/{id}', [ValidasiBendaharaController::class, 'disapprove'])->name('validasi.disapprove');
+    Route::resource('informasi', InformasiController::class);
 });
 
 // Route untuk role 'ketua'
@@ -109,8 +112,8 @@ Route::middleware(['auth', 'role:ketua'])->group(function () {
     Route::delete('/ketua/peminjaman/{id}', [PeminjamanKetuaController::class, 'destroy'])->name('ketua.peminjaman.destroy');
     Route::get('ketua/laporan', [LaporanKetuaController::class, 'index'])->name('ketua.laporan.index');
     Route::get('ketua/validasi', [ValidasiKetuaController::class, 'showValidationPage'])->name('ketua.validasi');
-    Route::post('/validasi/approve/{id}', [ValidasiKetuaController::class, 'approve']);
-    Route::post('/validasi/disapprove/{id}', [ValidasiKetuaController::class, 'disapprove']);
+    // Route::post('/validasi/approve/{id}', [ValidasiKetuaController::class, 'approve']);
+    // Route::post('/validasi/disapprove/{id}', [ValidasiKetuaController::class, 'disapprove']);
     Route::get('ketua/pembayaran', [PembayaranKetuaController::class, 'index'])->name('ketua.pembayaran.index');
     Route::post('ketua/pembayaran/store', [PembayaranKetuaController::class, 'store'])->name('ketua.pembayaran.store');
 });
@@ -126,8 +129,8 @@ Route::middleware(['auth', 'role:wakil_ketua'])->group(function () {
     Route::delete('/wakil/peminjaman/{id}', [PeminjamanWakilController::class, 'destroy'])->name('wakil_ketua.peminjaman.destroy');
     Route::get('wakil/laporan', [LaporanWakilController::class, 'index'])->name('wakil_ketua.laporan.index');
     Route::get('wakil/validasi', [ValidasiWakilController::class, 'showValidationPage'])->name('wakil_ketua.validasi');
-    Route::post('/validasi/approve/{id}', [ValidasiWakilController::class, 'approve']);
-    Route::post('/validasi/disapprove/{id}', [ValidasiWakilController::class, 'disapprove']);
+    // Route::post('/validasi/approve/{id}', [ValidasiWakilController::class, 'approve']);
+    // Route::post('/validasi/disapprove/{id}', [ValidasiWakilController::class, 'disapprove']);
     Route::get('wakil/pembayaran', [PembayaranWakilController::class, 'index'])->name('wakil_ketua.pembayaran.index');
     Route::post('wakil/pembayaran/store', [PembayaranWakilController::class, 'store'])->name('wakil_ketua.pembayaran.store');
 });

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class RekapDataPenggunaController extends Controller
 {
-    public function RekapData() {
+    public function index() {
         // Ambil semua data pengguna dari database
         $rekap = Rekap::all();
         
@@ -15,11 +15,11 @@ class RekapDataPenggunaController extends Controller
         return view('LayoutBendahara.RekapData', compact('rekap'));
     }
 
-    public function tambahRekap() {
+    public function create() {
         return view('LayoutBendahara.TambahRekap');
     }
     
-    public function storeRekap(Request $request) {
+    public function store(Request $request) {
         // Validasi data
         $request->validate([
             'tanggal' => 'required|date',
@@ -39,10 +39,10 @@ class RekapDataPenggunaController extends Controller
         ]);
     
         // Redirect ke halaman RekapData dengan pesan sukses
-        return redirect()->route('bendahara.RekapData')->with('success', 'Data rekap berhasil ditambahkan!');
+        return redirect()->route('rekap-data.index')->with('success', 'Data rekap berhasil ditambahkan!');
     }
     
-    public function editRekap($id){
+    public function edit($id){
         // Ambil data rekap berdasarkan ID
         $rekap = Rekap::findOrFail($id);
 
@@ -50,7 +50,7 @@ class RekapDataPenggunaController extends Controller
         return view('LayoutBendahara.EditRekap', compact('rekap'));
     }
 
-    public function updateRekap(Request $request, $id){
+    public function update(Request $request, $id){
         // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
@@ -70,16 +70,16 @@ class RekapDataPenggunaController extends Controller
         ]);
 
         // Redirect kembali ke halaman rekap dengan pesan sukses
-        return redirect()->route('bendahara.RekapData')->with('success', 'Data rekap berhasil diperbarui.');
+        return redirect()->route('rekap-data.index')->with('success', 'Data rekap berhasil diperbarui.');
     }
 
-        public function hapusRekap($id){
+        public function destroy($id){
         // Temukan data rekap berdasarkan ID dan hapus
         $rekap = Rekap::findOrFail($id);
         $rekap->delete();
 
         // Redirect kembali ke halaman rekap dengan pesan sukses
-        return redirect()->route('bendahara.RekapData')->with('success', 'Data rekap berhasil dihapus.');
+        return redirect()->route('rekap-data.index')->with('success', 'Data rekap berhasil dihapus.');
     }
 
 }

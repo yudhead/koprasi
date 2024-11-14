@@ -104,7 +104,6 @@
                                 </button>
                             @endif
                         </td>
-                        
                     </tr>
                 @endforeach
             </tbody>
@@ -114,16 +113,16 @@
 
 <script>
     function approve(id, role) {
+        console.log("Approve button clicked"); // Debug log
         $.ajax({
-            url: `/validasi/approve/${id}`,
+            url: `/validasi/approve/${id}`,  // Pastikan ID ada di URL
             type: 'POST',
             data: {
                 role: role,
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                console.log(response.message);
-                // Ganti tombol dengan teks status persetujuan
+                console.log("Success:", response.message);
                 $(`#${role}-status-${id}`).html('<span class="text-success">Data disetujui</span>');
             },
             error: function(xhr) {
@@ -134,6 +133,7 @@
     }
 
     function disapprove(id, role) {
+        console.log("Disapprove button clicked"); // Debug log
         $.ajax({
             url: `/validasi/disapprove/${id}`,
             type: 'POST',
@@ -142,8 +142,7 @@
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                console.log(response.message);
-                // Ganti tombol dengan teks status penolakan
+                console.log("Success:", response.message);
                 $(`#${role}-status-${id}`).html('<span class="text-danger">Data tidak disetujui</span>');
             },
             error: function(xhr) {
@@ -153,4 +152,5 @@
         });
     }
 </script>
+
 @endsection

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class TambahDataPenggunaController extends Controller
 {
-    public function DataPengguna() {
+    public function index() {
         // Ambil semua data pengguna dari database
         $penggunas = Pengguna::all();
         
@@ -41,7 +41,7 @@ class TambahDataPenggunaController extends Controller
         ]);
     
         // Redirect dengan pesan sukses
-        return redirect()->route('bendahara.DataPengguna')->with('success', 'Data pengguna berhasil ditambahkan');
+        return redirect()->route('data-pengguna.index')->with('success', 'Data pengguna berhasil ditambahkan');
     }
     
     public function update(Request $request, $id) {
@@ -65,7 +65,7 @@ class TambahDataPenggunaController extends Controller
         ]);
     
         // Redirect dengan pesan sukses
-        return redirect()->route('bendahara.DataPengguna')->with('success', 'Data pengguna berhasil diupdate');
+        return redirect()->route('data-pengguna.index')->with('success', 'Data pengguna berhasil diupdate');
     }
     
    
@@ -82,7 +82,7 @@ class TambahDataPenggunaController extends Controller
     public function destroy($id) {
         $pengguna = Pengguna::find($id);
         $pengguna->delete();
-        return redirect()->route('bendahara.DataPengguna')->with('success', 'Data pengguna berhasil dihapus');
+        return redirect()->route('data-pengguna.index')->with('success', 'Data pengguna berhasil dihapus');
     }
     
 }
