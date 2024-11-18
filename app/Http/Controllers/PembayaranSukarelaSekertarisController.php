@@ -36,12 +36,15 @@ class PembayaranSukarelaSekertarisController extends Controller
 
         // Validate input data
         $validated = $request->validate([
-            'sukarela' => 'nullable|numeric|min:0'
+            'sukarela' => 'nullable|numeric|min:0',
+            'id_peminjaman' => 'required|integer' // Tambahkan validasi untuk `id_peminjaman`
         ]);
 
         // Get the NIK from the request
         $nik = $request->input('nik');
+        $id_peminjaman = $request->input('id_peminjaman');
         $peminjaman = Peminjaman::where('nik', $nik)
+            ->where('id_peminjaman', $id_peminjaman)
             ->where('role', $user->role) // Ensure the role matches
             ->latest()->first();
 
@@ -51,7 +54,6 @@ class PembayaranSukarelaSekertarisController extends Controller
         }
 
         // Retrieve required data
-        $id_peminjaman = $peminjaman->id_peminjaman; // Use `id_peminjaman` instead of `id`
         $nama = $peminjaman->nama; // Assuming `nama` exists in `Peminjaman` model
 
         // Prepare validated data for saving

@@ -33,6 +33,7 @@
                 </select>
             </div>
 
+            <input type="hidden" name="id_peminjaman" value="{{ $peminjaman->id_peminjaman }}">
             <div class="form-group">
                 <label for="sukarela">Simpanan Sukarela</label>
                 <input type="number" name="sukarela" class="form-control" id="sukarela" placeholder="Masukkan jumlah simpanan sukarela" step="0.01" min="0">
@@ -44,11 +45,17 @@
     </div>
 </div>
 
+
 <script>
-    // Mengisi otomatis jumlah pinjaman saat NIK dipilih
     document.getElementById('nik').addEventListener('change', function () {
         var selectedOption = this.options[this.selectedIndex];
+
+        // Ambil data id_peminjaman dan jumlah_pinjaman dari opsi yang dipilih
+        var idPeminjaman = selectedOption.getAttribute('data-id-peminjaman');
         var jumlahPinjaman = selectedOption.getAttribute('data-jumlah');
+
+        // Set nilai id_peminjaman dan jumlah_pinjaman ke input terkait
+        document.getElementById('id_peminjaman').value = idPeminjaman ? idPeminjaman : '';
         document.getElementById('jumlah_pinjaman').value = jumlahPinjaman ? jumlahPinjaman : '';
     });
 </script>

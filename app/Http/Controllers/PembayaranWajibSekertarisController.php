@@ -35,44 +35,50 @@ class PembayaranWajibSekertarisController extends Controller
     {
         $user = auth()->user();
 
-        // Validate input data
+        // Validasi data input
         $validated = $request->validate([
-            'simpanan_wajib' => 'required|numeric|min:15000'
+            'simpanan_wajib' => 'required|numeric|min:15000',
+            'id_peminjaman' => 'required|integer', // Tambahkan validasi untuk `id_peminjaman`
+            'nik' => 'required|string', // Pastikan `nik` divalidasi
         ], [
             'simpanan_wajib.min' => 'Simpanan wajib harus 15000 atau lebih.',
         ]);
 
-            // Get the NIK from the request
-            $nik = $request->input('nik');
-            $peminjaman = Peminjaman::where('nik', $nik)
-                ->where('role', $user->role) // Ensure the role matches
-                ->latest()->first();
+        // Ambil NIK dan ID Peminjaman dari request
+        $nik = $request->input('nik');
+        $id_peminjaman = $request->input('id_peminjaman');
 
-            // Check if a matching Peminjaman record was found
-            if (!$peminjaman) {
-                return redirect()->back()->withErrors(['Data peminjaman tidak ditemukan.']);
-            }
+        // Ambil data peminjaman berdasarkan NIK dan ID Peminjaman
+        $peminjaman = Peminjaman::where('nik', $nik)
+            ->where('id_peminjaman', $id_peminjaman)
+            ->where('role', $user->role) // Pastikan role sesuai
+            ->first();
 
-            // Retrieve required data
-            $id_peminjaman = $peminjaman->id_peminjaman; // Use `id_peminjaman` instead of `id`
-            $nama = $peminjaman->nama; // Assuming `nama` exists in `Peminjaman` model
+        // Cek apakah data Peminjaman ditemukan
+        if (!$peminjaman) {
+            return redirect()->back()->withErrors(['Data peminjaman tidak ditemukan.']);
+        }
 
-            // Prepare validated data for saving
-            $validated['id_peminjaman'] = $id_peminjaman;
-            $validated['nik'] = $nik;
-            $validated['nama'] = $nama;
-            $validated['simpanan_wajib'] = $validated['simpanan_wajib'];
-            $validated['role'] = $user->role;
-            $validated['created_by'] = $user->id;
+        // Ambil data yang diperlukan
+        $nama = $peminjaman->nama; // Pastikan `nama` ada di model `Peminjaman`
 
-            // Save the payment to the database
-            $pembayaran = PembayaranWajib::create($validated);
-            if (!$pembayaran) {
-                return redirect()->back()->withErrors('Pembayaran gagal disimpan.');
-            }
+        // Siapkan data untuk disimpan
+        $validated['nik'] = $nik;
+        $validated['id_peminjaman'] = $id_peminjaman;
+        $validated['nama'] = $nama;
+        $validated['role'] = $user->role;
+        $validated['created_by'] = $user->id;
 
-            return redirect()->route('sukarela.index')->with('success', 'Pembayaran berhasil disimpan.');
-            }
+        // Simpan data pembayaran ke database
+        $pembayaran = PembayaranWajib::create($validated);
+        if (!$pembayaran) {
+            return redirect()->back()->withErrors('Pembayaran gagal disimpan.');
+        }
+
+        return redirect()->route('sukarela.index')->with('success', 'Pembayaran berhasil disimpan.');
+    }
+
+
 
 }
 

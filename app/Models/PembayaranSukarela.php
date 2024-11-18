@@ -10,7 +10,7 @@ class PembayaranSukarela extends Model
     use HasFactory;
     public function peminjaman()
     {
-        return $this->belongsTo(Peminjaman::class, 'nik', 'nik'); // Sesuaikan jika kolom kunci berbeda
+        return $this->belongsTo(Peminjaman::class, 'id_peminjaman', 'id_peminjaman');
     }
     protected $table = 'pembayarans_sukarela';
     protected $primayKey = 'id';

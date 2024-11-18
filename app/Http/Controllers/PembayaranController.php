@@ -35,47 +35,50 @@ class PembayaranController extends Controller
     {
         $user = auth()->user();
 
-        // Validate input data
+        // Validasi data input
         $validated = $request->validate([
             'cicilan' => 'required|numeric',
+            'id_peminjaman' => 'required|integer', // Tambahkan validasi untuk `id_peminjaman`
         ]);
 
-        // Get the NIK from the request
+        // Ambil NIK dan ID Peminjaman dari request
         $nik = $request->input('nik');
-        $peminjaman = Peminjaman::where('nik', $nik)
-            ->where('role', $user->role) // Ensure the role matches
-            ->latest()->first();
+        $id_peminjaman = $request->input('id_peminjaman');
 
-        // Check if a matching Peminjaman record was found
+        // Ambil data peminjaman berdasarkan NIK dan ID Peminjaman
+        $peminjaman = Peminjaman::where('nik', $nik)
+            ->where('id_peminjaman', $id_peminjaman)
+            ->where('role', $user->role) // Pastikan role sesuai
+            ->first();
+
+        // Cek apakah data Peminjaman ditemukan
         if (!$peminjaman) {
             return redirect()->back()->withErrors(['Data peminjaman tidak ditemukan.']);
         }
 
-        // Retrieve required data
-        $id_peminjaman = $peminjaman->id_peminjaman; // Use `id_peminjaman` instead of `id`
-        $nama = $peminjaman->nama; // Assuming `nama` exists in `Peminjaman` model
+        // Ambil data yang diperlukan
+        $nama = $peminjaman->nama; // Pastikan `nama` ada di model `Peminjaman`
         $jumlah_pinjaman = $peminjaman->jumlah_pinjaman;
 
-        // Get the last payment if it exists
-        $lastPembayaran = Pembayaran::where('nik', $nik)->latest()->first();
+        // Cek pembayaran terakhir jika ada
+        $lastPembayaran = Pembayaran::where('id_peminjaman', $id_peminjaman)->latest()->first();
 
-        // Calculate the remaining amount (kekurangan)
+        // Hitung kekurangan
         if ($lastPembayaran) {
             $kekurangan = $lastPembayaran->kekurangan - $validated['cicilan'];
         } else {
             $kekurangan = $jumlah_pinjaman - $validated['cicilan'];
         }
 
-        // Prepare validated data for saving
-        $validated['id_peminjaman'] = $id_peminjaman;
+        // Siapkan data untuk disimpan
         $validated['nik'] = $nik;
         $validated['nama'] = $nama;
         $validated['jumlah_pinjaman'] = $jumlah_pinjaman;
-        $validated['kekurangan'] = max(0, $kekurangan); // Ensure kekurangan is not negative
+        $validated['kekurangan'] = max(0, $kekurangan); // Pastikan kekurangan tidak negatif
         $validated['role'] = $user->role;
         $validated['created_by'] = $user->id;
 
-        // Save the payment to the database
+        // Simpan data pembayaran ke database
         $pembayaran = Pembayaran::create($validated);
         if (!$pembayaran) {
             return redirect()->back()->withErrors('Pembayaran gagal disimpan.');
@@ -83,6 +86,8 @@ class PembayaranController extends Controller
 
         return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil disimpan.');
     }
+
+
 
 
 

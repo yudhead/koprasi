@@ -24,15 +24,17 @@
                 <label for="nik">Pilih NIK</label>
                 <select name="nik" id="nik" class="form-control" required>
                     <option value="">Pilih NIK</option>
-                @foreach ($peminjamans as $peminjaman)
-                    <option value="{{ $peminjaman->nik }}" data-jumlah="{{ $peminjaman->jumlah_pinjaman }}">
-                         {{ $peminjaman->nik }} - {{ $peminjaman->nama }}
-                    </option>
-                @endforeach
-
+                    @foreach ($peminjamans as $peminjaman)
+                        <option value="{{ $peminjaman->nik }}"
+                                data-id-peminjaman="{{ $peminjaman->id_peminjaman }}"
+                                data-jumlah="{{ $peminjaman->jumlah_pinjaman }}">
+                            {{ $peminjaman->nik }} - {{ $peminjaman->nama }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
 
+            <input type="hidden" name="id_peminjaman" id="id_peminjaman">
             <div class="form-group">
                 <label for="simpanan_wajib">simpanan wajib</label>
                 <input type="number" name="simpanan_wajib" class="form-control" id="simpanan_wajib" placeholder="Masukkan jumlah simpanan wajib" required>
@@ -44,11 +46,17 @@
     </div>
 </div>
 
+
 <script>
-    // Mengisi otomatis jumlah pinjaman saat NIK dipilih
     document.getElementById('nik').addEventListener('change', function () {
         var selectedOption = this.options[this.selectedIndex];
+
+        // Ambil data id_peminjaman dan jumlah_pinjaman dari opsi yang dipilih
+        var idPeminjaman = selectedOption.getAttribute('data-id-peminjaman');
         var jumlahPinjaman = selectedOption.getAttribute('data-jumlah');
+
+        // Set nilai id_peminjaman dan jumlah_pinjaman ke input terkait
+        document.getElementById('id_peminjaman').value = idPeminjaman ? idPeminjaman : '';
         document.getElementById('jumlah_pinjaman').value = jumlahPinjaman ? jumlahPinjaman : '';
     });
 </script>
