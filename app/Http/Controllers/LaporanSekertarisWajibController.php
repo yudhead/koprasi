@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Peminjaman;
 use App\Models\PembayaranWajib;
 use Illuminate\Http\Request;
@@ -9,35 +10,33 @@ class LaporanSekertarisWajibController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PembayaranWajib::query();
+        // Query dasar dengan relasi peminjaman
+        $query = PembayaranWajib::with('peminjaman');
 
-        // Apply search if 'search' is provided
+        // Filter pencarian berdasarkan NIK jika ada parameter search
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nik', 'like', "%$search%");
+
+            // Cari data berdasarkan NIK atau nama pada tabel peminjaman
+            $query->whereHas('peminjaman', function ($q) use ($search) {
+                $q->where('nik', 'like', "%$search%")
+                  ->orWhere('nama', 'like', "%$search%");
             });
         }
 
-        // Get all pembayaran data
+        // Ambil data pembayaran wajib beserta relasi peminjaman
         $pembayaran = $query->get();
 
-        // Retrieve only 'nik' and 'nama' columns from Peminjaman
-        $peminjaman = Peminjaman::select('nik', 'nama')->get();
-
-        // Merge data from peminjaman into pembayaran based on 'nik'
+        // Proses setiap pembayaran untuk menambahkan nama peminjaman (opsional jika tidak otomatis terisi)
         foreach ($pembayaran as $payment) {
-            // Find corresponding peminjaman record by 'nik'
-            $relatedPeminjaman = $peminjaman->where('nik', $payment->nik)->first();
-
-            // If there is a matching peminjaman record, add the name from peminjaman
-            if ($relatedPeminjaman) {
-                $payment->nama = $relatedPeminjaman->nama;
+            if ($payment->peminjaman) {
+                $payment->nama = $payment->peminjaman->nama;
             } else {
-                $payment->nama = ''; // Set to empty if no matching record is found
+                $payment->nama = ''; // Jika tidak ada relasi, set nama menjadi kosong
             }
         }
 
+        // Kirim data ke view
         return view('layoutSekertaris.laporan-wajib', compact('pembayaran'));
     }
 }

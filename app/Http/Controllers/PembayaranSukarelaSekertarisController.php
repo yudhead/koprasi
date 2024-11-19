@@ -10,10 +10,8 @@ class PembayaranSukarelaSekertarisController extends Controller
 {
     public function index()
     {
-        // Authentication user
+        // Ambil data peminjaman berdasarkan role user yang login
         $user = auth()->user();
-
-        // Retrieve peminjaman data according to role
         $peminjamans = Peminjaman::where('role', $user->role)->get();
 
         return view('LayoutSekertaris.Pembayaran-sukarela', compact('peminjamans'));
@@ -21,10 +19,8 @@ class PembayaranSukarelaSekertarisController extends Controller
 
     public function create()
     {
-        // Authentication
+        // Ambil data peminjaman berdasarkan role user yang login
         $user = auth()->user();
-
-        // Retrieve peminjaman data according to role
         $peminjamans = Peminjaman::where('role', $user->role)->get();
 
         return view('LayoutSekertaris.Pembayaran-sukarela', compact('peminjamans'));
@@ -34,42 +30,39 @@ class PembayaranSukarelaSekertarisController extends Controller
     {
         $user = auth()->user();
 
-        // Validate input data
+        // Validasi data input
         $validated = $request->validate([
             'sukarela' => 'nullable|numeric|min:0',
-            'id_peminjaman' => 'required|integer' // Tambahkan validasi untuk `id_peminjaman`
+            'id_peminjaman' => 'required|exists:peminjaman,id_peminjaman', // Validasi `id_peminjaman`
         ]);
 
-        // Get the NIK from the request
-        $nik = $request->input('nik');
-        $id_peminjaman = $request->input('id_peminjaman');
-        $peminjaman = Peminjaman::where('nik', $nik)
-            ->where('id_peminjaman', $id_peminjaman)
-            ->where('role', $user->role) // Ensure the role matches
-            ->latest()->first();
+        // Ambil data peminjaman berdasarkan `id_peminjaman` dengan role user
+        $peminjaman = Peminjaman::where('id_peminjaman', $validated['id_peminjaman'])
+            ->where('role', $user->role)
+            ->first();
 
-        // Check if a matching Peminjaman record was found
         if (!$peminjaman) {
-            return redirect()->back()->withErrors(['Data peminjaman tidak ditemukan.']);
+            return redirect()->back()->withErrors(['Data peminjaman tidak ditemukan atau tidak sesuai role.']);
         }
 
-        // Retrieve required data
-        $nama = $peminjaman->nama; // Assuming `nama` exists in `Peminjaman` model
+        // Siapkan data untuk disimpan
+        $dataToSave = [
+            'id_peminjaman' => $peminjaman->id_peminjaman,
+            'nik' => $peminjaman->nik,
+            'sukarela' => $validated['sukarela'] ?? 0,
+            'role' => $user->role,
+            'created_by' => $user->id,
+        ];
 
-        // Prepare validated data for saving
-        $validated['id_peminjaman'] = $id_peminjaman;
-        $validated['nik'] = $nik;
-        $validated['nama'] = $nama;
-        $validated['sukarela'] = $validated['sukarela'] ?? 0;
-        $validated['role'] = $user->role;
-        $validated['created_by'] = $user->id;
+        // Simpan data ke tabel pembayaran sukarela
+        $pembayaran = PembayaranSukarela::create($dataToSave);
 
-        // Save the payment to the database
-        $pembayaran = PembayaranSukarela::create($validated);
         if (!$pembayaran) {
             return redirect()->back()->withErrors('Pembayaran gagal disimpan.');
         }
 
         return redirect()->route('sukarela.index')->with('success', 'Pembayaran berhasil disimpan.');
     }
+
+
 }

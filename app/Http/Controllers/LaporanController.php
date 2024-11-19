@@ -10,36 +10,34 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pembayaran::query();
+        // Ambil semua data pembayaran dengan relasi peminjaman
+        $query = Pembayaran::with('peminjaman');
+
+        // Filter berdasarkan pencarian
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
+
             $query->whereHas('peminjaman', function ($q) use ($search) {
                 $q->where('nama', 'like', "%$search%")
                   ->orWhere('nik', 'like', "%$search%");
             });
         }
+
+        // Eksekusi query
         $pembayaran = $query->get();
-        // Mengambil semua data pembayaran
-        $pembayaran = Pembayaran::all();
 
-        // Mengambil data peminjaman hanya kolom 'nik', 'nama', dan 'jumlah_pinjaman'
-        $peminjaman = Peminjaman::select('nik', 'nama', 'jumlah_pinjaman')->get();
-
-        // Gabungkan data peminjaman ke dalam pembayaran berdasarkan 'nik'
+        // Iterasi dan tambahkan data peminjaman
         foreach ($pembayaran as $payment) {
-            // Cari data peminjaman sesuai 'nik'
-            $relatedPeminjaman = $peminjaman->where('nik', $payment->nik)->first();
-
-            // Jika ada peminjaman yang cocok, tambahkan jumlah_pinjaman dan nama ke pembayaran
-            if ($relatedPeminjaman) {
-                $payment->jumlah_pinjaman = $relatedPeminjaman->jumlah_pinjaman;
-                $payment->nama = $relatedPeminjaman->nama; // Tambahkan nama
+            if ($payment->peminjaman) {
+                $payment->jumlah_pinjaman = $payment->peminjaman->jumlah_pinjaman;
+                $payment->nama = $payment->peminjaman->nama;
             } else {
-                $payment->jumlah_pinjaman = 0; // Jika tidak ditemukan, set ke 0
-                $payment->nama = ''; // Set nama ke string kosong jika tidak ditemukan
+                $payment->jumlah_pinjaman = 0; // Default jika tidak ada
+                $payment->nama = ''; // Default jika tidak ada
             }
         }
 
         return view('LayoutBendahara.Laporan', compact('pembayaran'));
     }
 }
+

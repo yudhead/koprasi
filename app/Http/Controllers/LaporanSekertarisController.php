@@ -9,40 +9,43 @@ use Illuminate\Http\Request;
 class LaporanSekertarisController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Pembayaran::query();
-    if ($request->has('search') && !empty($request->search)) {
-        $search = $request->search;
-        $query->whereHas('jumlah_peminjaman', function ($q) use ($search) {
-            $q->where('nama', 'like', "%$search%")
-              ->orWhere('nik', 'like', "%$search%");
-        });
-    }
-    $pembayaran = $query->get();
-    // Mengambil semua data pembayaran
-    $pembayaran = Pembayaran::all();
+    {
+        // Query dasar untuk pembayaran
+        $query = Pembayaran::with('peminjaman'); // Menggunakan eager loading untuk relasi
 
-    // Mengambil data peminjaman hanya kolom 'nik', 'nama', dan 'jumlah_pinjaman'
-    $peminjaman = Peminjaman::select('nik', 'nama', 'jumlah_pinjaman')->get();
-
-
-    // Gabungkan data peminjaman ke dalam pembayaran berdasarkan 'nik'
-    foreach ($pembayaran as $payment) {
-        // Cari data peminjaman sesuai 'nik'
-        $relatedPeminjaman = $peminjaman->where('nik', $payment->nik)->first();
-
-        // Jika ada peminjaman yang cocok, tambahkan jumlah_pinjaman dan nama ke pembayaran
-        if ($relatedPeminjaman) {
-            $payment->jumlah_pinjaman = $relatedPeminjaman->jumlah_pinjaman;
-            $payment->nama = $relatedPeminjaman->nama; // Tambahkan nama
-        } else {
-            $payment->jumlah_pinjaman = 0; // Jika tidak ditemukan, set ke 0
-            $payment->nama = ''; // Set nama ke string kosong jika tidak ditemukan
+        // Filter pencarian jika parameter search ada
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->whereHas('peminjaman', function ($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")
+                  ->orWhere('nik', 'like', "%$search%");
+            });
         }
+
+        // Ambil data pembayaran beserta relasi peminjaman
+        $pembayaran = $query->get();
+
+        // Proses data untuk melengkapi informasi peminjaman
+        foreach ($pembayaran as $payment) {
+            $relatedPeminjaman = $payment->peminjaman; // Relasi peminjaman
+
+            if ($relatedPeminjaman) {
+                // Tambahkan data peminjaman ke pembayaran
+                $payment->nik = $relatedPeminjaman->nik;
+                $payment->nama = $relatedPeminjaman->nama;
+                $payment->jumlah_pinjaman = $relatedPeminjaman->jumlah_pinjaman;
+            } else {
+                // Jika tidak ada data peminjaman yang sesuai
+                $payment->nik = '';
+                $payment->nama = '';
+                $payment->jumlah_pinjaman = 0;
+            }
+        }
+
+        // Kirim data ke view
+        return view('layoutSekertaris.laporan', compact('pembayaran'));
     }
 
 
-    return view('layoutSekertaris.laporan', compact('pembayaran'));
-}
 
 }

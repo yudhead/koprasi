@@ -8,17 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Laporan extends Model
 {
     use HasFactory;
-    public function peminjaman()
-    {
-        return $this->belongsTo(Peminjaman::class, 'id_peminjaman', 'id_peminjaman');
-    }
+
     protected $fillable = [
-        'id_peminjaman',
+        'nama',
+        'simpanan_wajib',
+        'simpanan_sukarela',
         'peminjaman',
         'cicilan',
         'kekurangan'
     ];
-
+    
     public function user()
 {
     return $this->belongsTo(User::class, 'created_by');

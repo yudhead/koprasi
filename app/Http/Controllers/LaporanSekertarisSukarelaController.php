@@ -3,42 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\PembayaranSukarela;
-use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
 class LaporanSekertarisSukarelaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PembayaranSukarela::query();
+        // Query dasar dengan eager loading relasi ke tabel peminjaman
+        $query = PembayaranSukarela::with('peminjaman');
 
-        // Apply search if 'search' is provided
+        // Filter berdasarkan pencarian (NIK atau Nama)
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nik', 'like', "%$search%");
+
+            // Gunakan whereHas untuk filter data dari tabel terkait (peminjaman)
+            $query->whereHas('peminjaman', function ($q) use ($search) {
+                $q->where('nik', 'like', "%$search%")
+                  ->orWhere('nama', 'like', "%$search%");
             });
         }
 
-        // Get all pembayaran data including 'sukarela' field
+        // Ambil data pembayaran sukarela dengan relasi peminjaman
         $pembayaran = $query->get();
 
-        // Retrieve only 'nik' and 'nama' columns from Peminjaman
-        $peminjaman = Peminjaman::select('nik', 'nama')->get();
-
-        // Merge data from peminjaman into pembayaran based on 'nik'
+        // Pastikan setiap pembayaran memiliki properti `nama` dari peminjaman
         foreach ($pembayaran as $payment) {
-            // Find corresponding peminjaman record by 'nik'
-            $relatedPeminjaman = $peminjaman->where('nik', $payment->nik)->first();
-
-            // If there is a matching peminjaman record, add the name from peminjaman
-            if ($relatedPeminjaman) {
-                $payment->nama = $relatedPeminjaman->nama;
-            } else {
-                $payment->nama = ''; // Set to empty if no matching record is found
-            }
+            $payment->nama = $payment->peminjaman ? $payment->peminjaman->nama : ''; // Jika ada relasi, ambil nama
         }
 
+        // Kirim data ke view
         return view('layoutSekertaris.laporan-sukarela', compact('pembayaran'));
     }
 }
