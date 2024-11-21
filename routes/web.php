@@ -31,6 +31,18 @@ use App\Http\Controllers\PembayaranSukarelaSekertarisController;
 use App\Http\Controllers\LaporanSekertarisWajibController;
 use App\Http\Controllers\LaporanSekertarisSukarelaController;
 use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\PeminjamanAnggota;
+use App\Http\Controllers\PembayaranSukarelaAnggotaController;
+use App\Http\Controllers\PembayaranWajibAnggotaController;
+use App\Http\Controllers\PembayaranAnggotaController;
+use App\Http\Controllers\LaporanAnggotaController;
+use App\Http\Controllers\LaporanAnggotaSukarela;
+use App\Http\Controllers\LaporanAnggotaWajib;
+
+
+
+
+
 
 
 
@@ -138,7 +150,17 @@ Route::middleware(['auth', 'role:wakil_ketua'])->group(function () {
 // Route untuk role 'anggota'
 Route::middleware(['auth', 'role:anggota'])->group(function () {
     Route::get('/anggota/dashboard', [AnggotaController::class, 'index'])->name('anggota.dashboard');
+    Route::resource('PeminjamanAnggota', PeminjamanAnggota::class);
+    Route::resource('PembayaranWajib', PembayaranWajibAnggotaController::class);
+    Route::resource('PembayaranSukarela', PembayaranSukarelaAnggotaController::class);
+    Route::resource('PembayaranAngsuran', PembayaranAnggotaController::class);
+    Route::resource('LaporanAngsuran', LaporanAnggotaController::class);
+    Route::resource('LaporanAngsuranWajib', LaporanAnggotaWajib::class);
+    Route::resource('LaporanAngsuranSukarela', LaporanAnggotaSukarela::class);
+
+
 });
+
 
 
 

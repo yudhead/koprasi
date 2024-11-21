@@ -5,28 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
-class PeminjamanController extends Controller
+class PeminjamanAnggota extends Controller
 {
     public function index()
     {
-        // $peminjaman = Peminjaman::all();
-        $peminjaman = Peminjaman::selectRaw('*, (SELECT COUNT(*) FROM peminjaman p WHERE p.nik = peminjaman.nik) as loan_count')
-        ->get();
-        return view('LayoutSekertaris.peminjaman-index', compact('peminjaman'));
+        $user = auth()->user();
+
+        // Filter data berdasarkan role pengguna yang login
+        $peminjaman = Peminjaman::where('role', $user->role)
+            ->where('created_by', $user->id) // Hanya data yang diinput oleh pengguna ini
+            ->selectRaw('*, (SELECT COUNT(*) FROM peminjaman p WHERE p.nik = peminjaman.nik) as loan_count')
+            ->get();
+
+        return view('LayoutAnggota.peminjaman-index', compact('peminjaman'));
     }
+
 
     public function create()
     {
-        return view('LayoutSekertaris.peminjaman');
+        return view('LayoutAnggota.peminjaman-create');
     }
 
     public function store(Request $request)
 {
-    $user = auth()->user(); // Mendapatkan pengguna yang sedang login
+    $user = auth()->user();
 
     $request->validate([
         'nama' => 'required',
-        'nik' => 'required',
+        'nik' => 'required|unique:peminjaman,nik',
         'tanggal_lahir' => 'required',
         'alamat' => 'required',
         'no_telp' => 'required',
@@ -44,25 +50,20 @@ class PeminjamanController extends Controller
     $peminjaman->no_telp = $request->input('no_telp');
     $peminjaman->jumlah_pinjaman = $request->input('jumlah_pinjaman');
     $peminjaman->jumlah_angsuran = $request->input('jumlah_angsuran');
-    $peminjaman->role = $user->role; // Menyimpan role pengguna
+    $peminjaman->role = $user->role;
+    $peminjaman->created_by = $user->id; // Menyimpan ID pengguna yang membuat data
 
-    if ($request->hasFile('unduhan_pengajuan')) {
-        $file = $request->file('unduhan_pengajuan');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads'), $filename);
-        $peminjaman->unduhan_pengajuan = 'uploads/' . $filename;
-    }
-
+    // Jika ada file yang diunggah
     if ($request->hasFile('upload_pengajuan')) {
         $file = $request->file('upload_pengajuan');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads'), $filename);
-        $peminjaman->upload_pengajuan = 'uploads/' . $filename;
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads'), $fileName);
+        $peminjaman->upload_pengajuan = $fileName;
     }
 
     $peminjaman->save();
 
-    return view('LayoutSekertaris.peminjaman-index')->with('success', 'Peminjaman berhasil ditambahkan');
+    return redirect()->route('PeminjamanAnggota.index')->with('success', 'Peminjaman berhasil ditambahkan');
 }
 
 }

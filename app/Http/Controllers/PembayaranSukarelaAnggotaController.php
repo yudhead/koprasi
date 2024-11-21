@@ -6,7 +6,7 @@ use App\Models\PembayaranSukarela;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
-class PembayaranSukarelaSekertarisController extends Controller
+class PembayaranSukarelaAnggotaController extends Controller
 {
     public function index()
     {
@@ -14,7 +14,7 @@ class PembayaranSukarelaSekertarisController extends Controller
         $user = auth()->user();
         $peminjamans = Peminjaman::where('role', $user->role)->get();
 
-        return view('LayoutAnggota.pembayaran-angsuran-sukarela', compact('peminjamans'));
+        return view('LayoutAnggota.Pembayaran-Angsuran-sukarela', compact('peminjamans'));
     }
 
     public function create()
@@ -23,7 +23,7 @@ class PembayaranSukarelaSekertarisController extends Controller
         $user = auth()->user();
         $peminjamans = Peminjaman::where('role', $user->role)->get();
 
-        return view('LayoutAnggota.pembayaran-angsuran-sukarela', compact('peminjamans'));
+        return view('LayoutAnggota.Pembayaran-Angsuran-sukarela', compact('peminjamans'));
     }
 
     public function store(Request $request)
@@ -61,8 +61,7 @@ class PembayaranSukarelaSekertarisController extends Controller
             return redirect()->back()->withErrors('Pembayaran gagal disimpan.');
         }
 
-        return redirect()->route('sukarela.index')->with('success', 'Pembayaran berhasil disimpan.');
+        return redirect()->route('PembayaranSukarela.index')->with('success', 'Pembayaran berhasil disimpan.');
     }
-
 
 }

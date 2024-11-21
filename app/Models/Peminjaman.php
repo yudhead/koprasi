@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Peminjaman extends Model
 {
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
     use HasFactory;
     protected $table = 'peminjaman';
     protected $fillable = [

@@ -1,12 +1,11 @@
 @extends('LayoutAnggota.dashboard')
 
-
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="main-content">
     <div class="container">
-        <h2>Form Pembayaran Angsuran</h2>
+        <h2>Form Pembayaran Wajib</h2>
         @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -18,7 +17,7 @@
         @endif
 
         <!-- Form untuk pembayaran -->
-        <form action="{{ route('PembayaranAngsuran.store') }}" method="POST">
+        <form action="#" method="POST">
             @csrf
 
             <div class="form-group">
@@ -34,22 +33,19 @@
                     @endforeach
                 </select>
             </div>
+
             <input type="hidden" name="id_peminjaman" id="id_peminjaman">
             <div class="form-group">
-                <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
-                <input type="number" name="jumlah_pinjaman" class="form-control" id="jumlah_pinjaman" placeholder="Jumlah pinjaman akan otomatis terisi" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="cicilan">Cicilan</label>
-                <input type="number" name="cicilan" class="form-control" id="cicilan" placeholder="Masukkan jumlah cicilan" required>
+                <label for="simpanan_wajib">simpanan wajib</label>
+                <input type="number" name="simpanan_wajib" class="form-control" id="simpanan_wajib" placeholder="Masukkan jumlah simpanan wajib" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Bayar</button>
-            <a href="{{ route('PembayaranAngsuran.index') }}" class="btn btn-secondary">Batal</a>
+            <a href="{{ route('wajib.index') }}" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </div>
+
 
 <script>
     document.getElementById('nik').addEventListener('change', function () {
@@ -64,5 +60,4 @@
         document.getElementById('jumlah_pinjaman').value = jumlahPinjaman ? jumlahPinjaman : '';
     });
 </script>
-
 @endsection
