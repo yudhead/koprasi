@@ -40,6 +40,7 @@ class PeminjamanAnggota extends Controller
         'jumlah_angsuran' => 'required|numeric',
         'unduhan_pengajuan' => 'nullable|mimes:pdf',
         'upload_pengajuan' => 'nullable|mimes:pdf',
+
     ]);
 
     $peminjaman = new Peminjaman();

@@ -24,9 +24,12 @@
                 <th>Tanggal Lahir</th>
                 <th>Alamat</th>
                 <th>No. Telp</th>
+                <th>Paket</th>
                 <th>Jumlah Pinjaman</th>
                 <th>Jumlah Angsuran</th>
+                <th>Status</th>
                 <th>Total Meminjam</th>
+
 
             </tr>
         </thead>
@@ -39,8 +42,10 @@
                 <td>{{ $item->tanggal_lahir }}</td>
                 <td>{{ $item->alamat }}</td>
                 <td>{{ $item->no_telp }}</td>
+                <td>{{ $item->paket }} Bulan</td>
                 <td>{{ $item->jumlah_pinjaman }}</td>
                 <td>{{ $item->jumlah_angsuran }}</td>
+                <td>{{ $item->status === 'lunas' ? '✔ Lunas' : '✘ Aktif' }}</td>
                 <td>{{ $item->loan_count }}</td>
             </tr>
             @endforeach

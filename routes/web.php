@@ -78,7 +78,7 @@ Route::middleware(['auth', 'role:sekertaris'])->group(function () {
     Route::resource('LaporanSukarela', LaporanSekertarisSukarelaController::class);
     Route::post('/pembayaran/store', [PembayaranController::class, 'store'])->name('pembayaran.store');
     Route::get('sekertaris/validasi', [ValidasiSekertarisController::class, 'showValidationPage'])->name('validasi');
-
+    Route::get('/pembayaran/angsuran-ke/{id_peminjaman}', [PembayaranController::class, 'getAngsuranKe']);
 });
 
 // Route untuk role 'bendahara'
