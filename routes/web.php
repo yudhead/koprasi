@@ -157,6 +157,8 @@ Route::middleware(['auth', 'role:anggota'])->group(function () {
     Route::resource('LaporanAngsuran', LaporanAnggotaController::class);
     Route::resource('LaporanAngsuranWajib', LaporanAnggotaWajib::class);
     Route::resource('LaporanAngsuranSukarela', LaporanAnggotaSukarela::class);
+    Route::get('/pembayaran/angsuran-ke/{id_peminjaman}', [PembayaranController::class, 'getAngsuranKe']);
+
 
 
 });

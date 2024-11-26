@@ -33,11 +33,14 @@ class PembayaranController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
+
+        // Validasi data input
         $validated = $request->validate([
             'cicilan' => 'required|numeric',
             'id_peminjaman' => 'required|integer',
         ]);
 
+        // Ambil data peminjaman berdasarkan nik dan id_peminjaman
         $nik = $request->input('nik');
         $id_peminjaman = $request->input('id_peminjaman');
         $peminjaman = Peminjaman::where('nik', $nik)
@@ -49,21 +52,31 @@ class PembayaranController extends Controller
             return redirect()->back()->withErrors(['Data peminjaman tidak ditemukan.']);
         }
 
+        // Hitung cicilan per bulan
+        $cicilan_per_bulan = $peminjaman->jumlah_pinjaman / $peminjaman->paket;
+
+        // Validasi cicilan input
+        if ($validated['cicilan'] != $cicilan_per_bulan) {
+            return redirect()->back()->withErrors([
+                'Jumlah cicilan harus tepat sebesar ' . number_format($cicilan_per_bulan, 2)
+            ]);
+        }
+
+        // Hitung angsuran ke
         $angsuran_sebelumnya = Pembayaran::where('id_peminjaman', $id_peminjaman)->count();
         $angsuran_ke = $angsuran_sebelumnya + 1;
 
+        // Cek apakah paket sudah selesai
         if ($angsuran_ke > $peminjaman->paket) {
             return redirect()->back()->withErrors(['Paket angsuran telah selesai.']);
         }
 
+        // Hitung sisa kekurangan
         $lastPembayaran = Pembayaran::where('id_peminjaman', $id_peminjaman)->latest()->first();
         $totalCicilan = $lastPembayaran ? $lastPembayaran->kekurangan : $peminjaman->jumlah_pinjaman;
-
-        if ($validated['cicilan'] > $totalCicilan) {
-            return redirect()->back()->withErrors(['Jumlah cicilan tidak boleh lebih dari sisa kekurangan.']);
-        }
-
         $kekurangan = $totalCicilan - $validated['cicilan'];
+
+        // Simpan pembayaran
         $validated['nik'] = $nik;
         $validated['nama'] = $peminjaman->nama;
         $validated['jumlah_pinjaman'] = $peminjaman->jumlah_pinjaman;
@@ -74,9 +87,12 @@ class PembayaranController extends Controller
         $validated['created_by'] = $user->id;
 
         $pembayaran = Pembayaran::create($validated);
+
         if (!$pembayaran) {
             return redirect()->back()->withErrors('Pembayaran gagal disimpan.');
         }
+
+        // Update status peminjaman jika lunas
         if ($kekurangan <= 0) {
             $peminjaman->status = 'lunas';
             $peminjaman->save();

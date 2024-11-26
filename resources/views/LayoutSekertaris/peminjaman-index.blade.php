@@ -55,23 +55,3 @@
 </div>
 @endsection
 
-{{-- @foreach($peminjaman as $item)
-<tr>
-    <td>{{ $loop->iteration }}</td>
-    <td>{{ $item->nama }}</td>
-    <td>{{ $item->nik }}</td>
-    <td>{{ $item->tanggal_lahir }}</td>
-    <td>{{ $item->alamat }}</td>
-    <td>{{ $item->no_telp }}</td>
-    <td>{{ $item->jumlah_pinjaman }}</td>
-    <td>{{ $item->jumlah_angsuran }}</td>
-    <td>
-        <a href="{{ route('peminjaman.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-        <form action="{{ route('peminjaman.destroy', $item->id) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
-        </form>
-    </td>
-</tr>
-@endforeach --}}
