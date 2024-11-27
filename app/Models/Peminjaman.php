@@ -9,6 +9,7 @@ class Peminjaman extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
     // Tentukan nama tabel
     protected $table = 'peminjaman';
 
@@ -22,6 +23,23 @@ class Peminjaman extends Model
     protected $keyType = 'int'; // Bisa 'string' jika primary key bertipe string
 
     // Kolom-kolom yang dapat diisi
+=======
+    protected $primaryKey = 'id_peminjaman'; // Tentukan primary key jika bukan 'id'
+
+    // Relasi: Peminjaman belongs to User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Relasi: Peminjaman has many Pembayaran
+    public function pembayarans()
+    {
+        return $this->hasMany(Pembayaran::class, 'id_peminjaman', 'id_peminjaman');
+    }
+
+    protected $table = 'peminjaman';  // Pastikan nama tabel sesuai dengan tabel di database
+>>>>>>> 1eab40175923cfd3547ad0890480e0a8f9057508
     protected $fillable = [
         'id_peminjaman', 
         'nama',
@@ -33,11 +51,17 @@ class Peminjaman extends Model
         'jumlah_angsuran',
         'unduhan_pengajuan',
         'upload_pengajuan',
+<<<<<<< HEAD
         'ketua_status', 
         'wakil_ketua_status',
         'sekertaris_status',
         'bendahara_status',
         'pengawas_status',
+=======
+        'paket',
+        'angsuran_ke',
+        'status',
+>>>>>>> 1eab40175923cfd3547ad0890480e0a8f9057508
     ];
 
     // Relasi dengan model User

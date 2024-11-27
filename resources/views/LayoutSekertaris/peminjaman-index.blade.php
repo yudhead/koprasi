@@ -24,9 +24,12 @@
                 <th>Tanggal Lahir</th>
                 <th>Alamat</th>
                 <th>No. Telp</th>
+                <th>Paket</th>
                 <th>Jumlah Pinjaman</th>
                 <th>Jumlah Angsuran</th>
+                <th>Status</th>
                 <th>Total Meminjam</th>
+
 
             </tr>
         </thead>
@@ -39,8 +42,10 @@
                 <td>{{ $item->tanggal_lahir }}</td>
                 <td>{{ $item->alamat }}</td>
                 <td>{{ $item->no_telp }}</td>
+                <td>{{ $item->paket }} Bulan</td>
                 <td>{{ $item->jumlah_pinjaman }}</td>
                 <td>{{ $item->jumlah_angsuran }}</td>
+                <td>{{ $item->status === 'lunas' ? '✔ Lunas' : '✘ Aktif' }}</td>
                 <td>{{ $item->loan_count }}</td>
             </tr>
             @endforeach
@@ -50,23 +55,3 @@
 </div>
 @endsection
 
-{{-- @foreach($peminjaman as $item)
-<tr>
-    <td>{{ $loop->iteration }}</td>
-    <td>{{ $item->nama }}</td>
-    <td>{{ $item->nik }}</td>
-    <td>{{ $item->tanggal_lahir }}</td>
-    <td>{{ $item->alamat }}</td>
-    <td>{{ $item->no_telp }}</td>
-    <td>{{ $item->jumlah_pinjaman }}</td>
-    <td>{{ $item->jumlah_angsuran }}</td>
-    <td>
-        <a href="{{ route('peminjaman.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-        <form action="{{ route('peminjaman.destroy', $item->id) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
-        </form>
-    </td>
-</tr>
-@endforeach --}}

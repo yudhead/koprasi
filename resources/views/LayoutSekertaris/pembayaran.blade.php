@@ -16,29 +16,40 @@
         </div>
         @endif
 
-        <!-- Form untuk pembayaran -->
         <form action="{{ route('pembayaran.store') }}" method="POST">
             @csrf
-
             <div class="form-group">
                 <label for="nik">Pilih NIK</label>
                 <select name="nik" id="nik" class="form-control" required>
                     <option value="">Pilih NIK</option>
-                    @foreach ($peminjamans as $peminjaman)
-                        <option value="{{ $peminjaman->nik }}"
-                                data-id-peminjaman="{{ $peminjaman->id_peminjaman }}"
-                                data-jumlah="{{ $peminjaman->jumlah_pinjaman }}">
-                            {{ $peminjaman->nik }} - {{ $peminjaman->nama }}
-                        </option>
+                    @foreach ($peminjamans as $pinjam)
+                        @if ($pinjam->status !== 'lunas')
+                            <option value="{{ $pinjam->nik }}"
+                                    data-id-peminjaman="{{ $pinjam->id_peminjaman }}"
+                                    data-jumlah="{{ $pinjam->jumlah_pinjaman }}"
+                                    data-paket="{{ $pinjam->paket }}">
+                                {{ $pinjam->nik }} - {{ $pinjam->nama }}
+                            </option>
+                        @endif
                     @endforeach
                 </select>
+
             </div>
+
             <input type="hidden" name="id_peminjaman" id="id_peminjaman">
             <div class="form-group">
                 <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
                 <input type="number" name="jumlah_pinjaman" class="form-control" id="jumlah_pinjaman" placeholder="Jumlah pinjaman akan otomatis terisi" readonly>
             </div>
+            <div class="form-group">
+                <label for="paket">Paket (bulan)</label>
+                <input type="number" name="paket" class="form-control" id="paket" placeholder="Paket akan otomatis terisi" readonly>
+            </div>
 
+            <div class="form-group">
+                <label for="angsuran_ke">Angsuran Bulan Ke</label>
+                <input type="number" name="angsuran_ke" class="form-control" id="angsuran_ke" placeholder="Angsuran bulan ke akan otomatis terisi" readonly>
+            </div>
             <div class="form-group">
                 <label for="cicilan">Cicilan</label>
                 <input type="number" name="cicilan" class="form-control" id="cicilan" placeholder="Masukkan jumlah cicilan" required>
@@ -47,21 +58,34 @@
             <button type="submit" class="btn btn-primary">Bayar</button>
             <a href="{{ route('pembayaran.index') }}" class="btn btn-secondary">Batal</a>
         </form>
+
+        <script>
+            document.getElementById('nik').addEventListener('change', function () {
+                var selectedOption = this.options[this.selectedIndex];
+                var idPeminjaman = selectedOption.getAttribute('data-id-peminjaman');
+                var jumlahPinjaman = selectedOption.getAttribute('data-jumlah');
+                var paket = selectedOption.getAttribute('data-paket');
+
+                document.getElementById('id_peminjaman').value = idPeminjaman ? idPeminjaman : '';
+                document.getElementById('jumlah_pinjaman').value = jumlahPinjaman ? jumlahPinjaman : '';
+                document.getElementById('paket').value = paket ? paket : '';
+
+                fetch(`/pembayaran/angsuran-ke/${idPeminjaman}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('angsuran_ke').value = data.angsuran_ke || '';
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        document.getElementById('angsuran_ke').value = '';
+                    });
+            });
+        </script>
     </div>
 </div>
-
-<script>
-    document.getElementById('nik').addEventListener('change', function () {
-        var selectedOption = this.options[this.selectedIndex];
-
-        // Ambil data id_peminjaman dan jumlah_pinjaman dari opsi yang dipilih
-        var idPeminjaman = selectedOption.getAttribute('data-id-peminjaman');
-        var jumlahPinjaman = selectedOption.getAttribute('data-jumlah');
-
-        // Set nilai id_peminjaman dan jumlah_pinjaman ke input terkait
-        document.getElementById('id_peminjaman').value = idPeminjaman ? idPeminjaman : '';
-        document.getElementById('jumlah_pinjaman').value = jumlahPinjaman ? jumlahPinjaman : '';
-    });
-</script>
-
 @endsection

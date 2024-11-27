@@ -82,10 +82,15 @@ Route::middleware(['auth', 'role:sekertaris'])->group(function () {
     Route::resource('wajib', PembayaranWajibSekertarisController::class);
     Route::resource('sukarela', PembayaranSukarelaSekertarisController::class);
     Route::post('/pembayaran/store', [PembayaranController::class, 'store'])->name('pembayaran.store');
+<<<<<<< HEAD
     Route::get('sekertaris/validasi', [ValidasiSekertarisController::class, 'showValidationPage'])->name('sekertaris.validasi');
     Route::post('sekertaris/validasi', [ValidasiSekertarisController::class, 'processValidation'])->name('sekertaris.processValidation');
     Route::get('sekertaris/validasi/test', [ValidasiSekertarisController::class, 'processValidation']);
     Route::resource('SekertarisInformasi', InformasiSekertarisController::class);
+=======
+    Route::get('sekertaris/validasi', [ValidasiSekertarisController::class, 'showValidationPage'])->name('validasi');
+    Route::get('/pembayaran/angsuran-ke/{id_peminjaman}', [PembayaranController::class, 'getAngsuranKe']);
+>>>>>>> 1eab40175923cfd3547ad0890480e0a8f9057508
 });
 
 // Route untuk role 'bendahara'
@@ -148,6 +153,8 @@ Route::middleware(['auth', 'role:anggota'])->group(function () {
     Route::resource('LaporanAngsuran', LaporanAnggotaController::class);
     Route::resource('LaporanAngsuranWajib', LaporanAnggotaWajib::class);
     Route::resource('LaporanAngsuranSukarela', LaporanAnggotaSukarela::class);
+    Route::get('/pembayaran/angsuran-ke/{id_peminjaman}', [PembayaranController::class, 'getAngsuranKe']);
+
 
 
 });
