@@ -46,6 +46,4 @@ class LaporanSekertarisController extends Controller
         return view('layoutSekertaris.laporan', compact('pembayaran'));
     }
 
-
-
 }

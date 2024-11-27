@@ -5,9 +5,7 @@
 <div class="main-content">
     <h2>Data Informasi</h2>
 
-    <a href="{{ route('informasi.create') }}" class="btn-add">Tambah Data Informasi</a>
-
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>No</th>
@@ -17,29 +15,24 @@
                 <th>Simpanan Terpimpin</th>
                 <th>Pinjaman</th>
                 <th>Total</th>
-                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($informasis as $key => $informasi)
+            @forelse ($informasis as $key => $informasi)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $informasi->tanggal }}</td>
-                    <td>{{ $informasi->simpanan_wajib }}</td>
-                    <td>{{ $informasi->simpanan_sukarela }}</td>
-                    <td>{{ $informasi->simpanan_terpimpin }}</td>
-                    <td>{{ $informasi->pinjaman }}</td>
-                    <td>{{ $informasi->total }}</td>
-                    <td>
-                        <!-- <a href="{{ route('informasi.edit', $informasi->id) }}" class="btn-edit">Edit</a> -->
-                        <form action="{{ route('informasi.destroy', $informasi->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                        </form>
-                    </td>
+                    <td>{{ \Carbon\Carbon::parse($informasi->tanggal)->format('d-m-Y') }}</td>
+                    <td>Rp {{ number_format($informasi->simpanan_wajib, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($informasi->simpanan_sukarela, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($informasi->simpanan_terpimpin, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($informasi->pinjaman, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($informasi->total, 0, ',', '.') }}</td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center">Tidak ada data tersedia</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

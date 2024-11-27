@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('peminjaman', function (Blueprint $table) {
-            $table->unsignedBigInteger('created_by')->nullable()->after('role');
-        });
+        // Schema::table('peminjaman', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('created_by')->nullable()->after('role');
+        // });
     }
 
 
@@ -22,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('peminjaman', function (Blueprint $table) {
-            //
-        });
+        // Schema::table('peminjaman', function (Blueprint $table) {
+        //     //
+        // });
     }
 };

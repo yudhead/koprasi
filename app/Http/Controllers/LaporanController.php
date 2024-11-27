@@ -10,30 +10,35 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil semua data pembayaran dengan relasi peminjaman
-        $query = Pembayaran::with('peminjaman');
+        // Query dasar untuk pembayaran
+        $query = Pembayaran::with('peminjaman'); // Menggunakan eager loading untuk relasi
 
-        // Filter berdasarkan pencarian
+        // Filter pencarian jika parameter search ada
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-
             $query->whereHas('peminjaman', function ($q) use ($search) {
                 $q->where('nama', 'like', "%$search%")
                   ->orWhere('nik', 'like', "%$search%");
             });
         }
 
-        // Eksekusi query
+        // Ambil data pembayaran beserta relasi peminjaman
         $pembayaran = $query->get();
 
-        // Iterasi dan tambahkan data peminjaman
+        // Proses data untuk melengkapi informasi peminjaman
         foreach ($pembayaran as $payment) {
-            if ($payment->peminjaman) {
-                $payment->jumlah_pinjaman = $payment->peminjaman->jumlah_pinjaman;
-                $payment->nama = $payment->peminjaman->nama;
+            $relatedPeminjaman = $payment->peminjaman; // Relasi peminjaman
+
+            if ($relatedPeminjaman) {
+                // Tambahkan data peminjaman ke pembayaran
+                $payment->nik = $relatedPeminjaman->nik;
+                $payment->nama = $relatedPeminjaman->nama;
+                $payment->jumlah_pinjaman = $relatedPeminjaman->jumlah_pinjaman;
             } else {
-                $payment->jumlah_pinjaman = 0; // Default jika tidak ada
-                $payment->nama = ''; // Default jika tidak ada
+                // Jika tidak ada data peminjaman yang sesuai
+                $payment->nik = '';
+                $payment->nama = '';
+                $payment->jumlah_pinjaman = 0;
             }
         }
 

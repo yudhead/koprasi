@@ -38,16 +38,21 @@ use App\Http\Controllers\PembayaranAnggotaController;
 use App\Http\Controllers\LaporanAnggotaController;
 use App\Http\Controllers\LaporanAnggotaSukarela;
 use App\Http\Controllers\LaporanAnggotaWajib;
-
-
-
-
-
-
-
-
-
-
+use App\Http\Controllers\LaporanSukarelaController;
+use App\Http\Controllers\LaporanWajibController;
+use App\Http\Controllers\PembayaranWajibBendaharaController;
+use App\Http\Controllers\PembayaranSukarelaBendaharaController;
+use App\Http\Controllers\LaporanKetuaWajibController;
+use App\Http\Controllers\LaporanKetuaSukarelaController;
+use App\Http\Controllers\PembayaranSukarelaKetuaController;
+use App\Http\Controllers\PembayaranWajibKetuaController;
+use App\Http\Controllers\LaporanWakilSukarelaController;
+use App\Http\Controllers\LaporanWakilWajibController;
+use App\Http\Controllers\PembayaranWajibWakilController;
+use App\Http\Controllers\PembayaranSukarelaWakilController;
+use App\Http\Controllers\InformasiKetuaController;
+use App\Http\Controllers\InformasiWakilController;
+use App\Http\Controllers\InformasiSekertarisController;
 
 
 // Route untuk menampilkan form login (GET)
@@ -71,80 +76,66 @@ Route::middleware(['auth', 'role:sekertaris'])->group(function () {
     Route::resource('peminjaman', PeminjamanController::class);
     //Route::resource('laporan', LaporanSekertarisController::class);
     Route::get('sekertaris/laporan', [LaporanSekertarisController::class, 'index'])->name('laporan.index');
+    Route::resource('LaporanWajib', LaporanSekertarisWajibController::class);
+    Route::resource('LaporanSukarela', LaporanSekertarisSukarelaController::class);
     Route::resource('pembayaran', PembayaranController::class);
     Route::resource('wajib', PembayaranWajibSekertarisController::class);
     Route::resource('sukarela', PembayaranSukarelaSekertarisController::class);
-    Route::resource('LaporanWajib', LaporanSekertarisWajibController::class);
-    Route::resource('LaporanSukarela', LaporanSekertarisSukarelaController::class);
     Route::post('/pembayaran/store', [PembayaranController::class, 'store'])->name('pembayaran.store');
-    Route::get('sekertaris/validasi', [ValidasiSekertarisController::class, 'showValidationPage'])->name('validasi');
-
+    Route::get('sekertaris/validasi', [ValidasiSekertarisController::class, 'showValidationPage'])->name('sekertaris.validasi');
+    Route::post('sekertaris/validasi', [ValidasiSekertarisController::class, 'processValidation'])->name('sekertaris.processValidation');
+    Route::get('sekertaris/validasi/test', [ValidasiSekertarisController::class, 'processValidation']);
+    Route::resource('SekertarisInformasi', InformasiSekertarisController::class);
 });
 
 // Route untuk role 'bendahara'
 Route::middleware(['auth', 'role:bendahara'])->group(function () {
     Route::get('/bendahara/dashboard', [BendaharaController::class, 'index'])->name('bendahara.dashboard');
     Route::resource('data-pengguna', TambahDataPenggunaController::class);
-    // Route::get('/bendahara/data-pengguna', [TambahDataPenggunaController::class, 'DataPengguna'])->name('bendahara.DataPengguna');
-    // Route::get('bendahara/tambah-pengguna', [TambahDataPenggunaController::class, 'create'])->name('bendahara.tambahPengguna');
-    // Route::post('bendahara/tambah-pengguna', [TambahDataPenggunaController::class, 'store'])->name('bendahara.storePengguna');
-    // Route::get('/pengguna/{id}/edit', [TambahDataPenggunaController::class, 'edit'])->name('bendahara.editPengguna');
-    // Route::delete('/pengguna/{id}', [TambahDataPenggunaController::class, 'destroy'])->name('bendahara.hapusPengguna');
-    // Route::put('/bendahara/updatePengguna/{id}', [TambahDataPenggunaController::class, 'update'])->name('bendahara.updatePengguna');
     Route::resource('rekap-data', RekapDataPenggunaController::class);
-    // Route::get('/bendahara/rekap-data', [RekapDataPenggunaController::class, 'RekapData'])->name('bendahara.RekapData');
-    // Route::get('/bendahara/tambahRekap', [RekapDataPenggunaController::class, 'tambahRekap'])->name('bendahara.TambahRekap');
-    // Route::post('/bendahara/storeRekap', [RekapDataPenggunaController::class, 'storeRekap'])->name('bendahara.storeRekap');
-    // Route::get('/bendahara/rekap/edit/{id}', [RekapDataPenggunaController::class, 'editRekap'])->name('bendahara.EditRekap');
-    // Route::post('/bendahara/rekap/update/{id}', [RekapDataPenggunaController::class, 'updateRekap'])->name('bendahara.updateRekap');
-    // Route::delete('/bendahara/rekap/delete/{id}', [RekapDataPenggunaController::class, 'hapusRekap'])->name('bendahara.hapusRekap');
-    Route::get('/bendahara/peminjaman', [PeminjamanBendaharaController::class, 'index'])->name('bendahara.peminjaman.index');
-    Route::get('/bendahara/peminjaman/create', [PeminjamanBendaharaController::class, 'create'])->name('bendahara.peminjaman.create');
-    Route::post('/bendahara/peminjaman/store', [PeminjamanBendaharaController::class, 'store'])->name('bendahara.peminjaman.store');
-    Route::get('/bendahara/peminjaman/{id}/edit', [PeminjamanBendaharaController::class, 'edit'])->name('bendahara.peminjaman.edit');
-    Route::put('/bendahara/peminjaman/{id}', [PeminjamanBendaharaController::class, 'update'])->name('bendahara.peminjaman.update');
-    Route::delete('/bendahara/peminjaman/{id}', [PeminjamanBendaharaController::class, 'destroy'])->name('bendahara.peminjaman.destroy');
-    Route::get('bendahara/pembayaran', [PembayaranBendaharaController::class, 'index'])->name('bendahara.pembayaran.index');
-    Route::post('bendahara/pembayaran/store', [PembayaranBendaharaController::class, 'store'])->name('bendahara.pembayaran.store');
-    Route::get('bendahara/laporan', [LaporanController::class, 'index'])->name('bendahara.laporan.index');
+    Route::resource('BendaharaPeminjaman', PeminjamanBendaharaController::class);
+    Route::resource('BendaharaPembayaran', PembayaranBendaharaController::class);
+    Route::resource('BendaharaWajib', PembayaranWajibBendaharaController::class);
+    Route::resource('BendaharaSukarela', PembayaranSukarelaBendaharaController::class);
+    Route::resource('BendaharaLaporan', LaporanController::class);
+    Route::resource('BendaharaLaporanSukarela', LaporanSukarelaController::class);
+    Route::resource('BendaharaLaporanWajib', LaporanWajibController::class);
     Route::get('bendahara/validasi', [ValidasiBendaharaController::class, 'showValidationPage'])->name('bendahara.validasi');
-    Route::post('/validasi/approve/{id}', [ValidasiBendaharaController::class, 'approve'])->name('validasi.approve');
-    Route::post('/validasi/disapprove/{id}', [ValidasiBendaharaController::class, 'disapprove'])->name('validasi.disapprove');
-    Route::resource('informasi', InformasiController::class);
+    Route::post('bendahara/validasi', [ValidasiBendaharaController::class, 'processValidation'])->name('bendahara.processValidation');
+    Route::get('bendahara/validasi/test', [ValidasiBendaharaController::class, 'processValidation']);
+    Route::resource('BendaharaInformasi', InformasiController::class);
 });
 
 // Route untuk role 'ketua'
 Route::middleware(['auth', 'role:ketua'])->group(function () {
     Route::get('/ketua', [KetuaController::class, 'index'])->name('ketua.dashboard');
-    Route::get('/ketua/peminjaman', [PeminjamanKetuaController::class, 'index'])->name('ketua.peminjaman.index');
-    Route::get('/ketua/peminjaman/create', [PeminjamanKetuaController::class, 'create'])->name('ketua.peminjaman.create');
-    Route::post('/ketua/peminjaman', [PeminjamanKetuaController::class, 'store'])->name('ketua.peminjaman.store');
-    Route::get('/ketua/peminjaman/{id}/edit', [PeminjamanKetuaController::class, 'edit'])->name('ketua.peminjaman.edit');
-    Route::put('/ketua/peminjaman/{id}', [PeminjamanKetuaController::class, 'update'])->name('ketua.peminjaman.update');
-    Route::delete('/ketua/peminjaman/{id}', [PeminjamanKetuaController::class, 'destroy'])->name('ketua.peminjaman.destroy');
-    Route::get('ketua/laporan', [LaporanKetuaController::class, 'index'])->name('ketua.laporan.index');
+    Route::resource('KetuaPeminjaman', PeminjamanKetuaController::class);
+    Route::resource('KetuaLaporan', LaporanKetuaController::class);
+    Route::resource('KetuaLaporanSukarela', LaporanKetuaSukarelaController::class);
+    Route::resource('KetuaLaporanWajib', LaporanKetuaWajibController::class);
     Route::get('ketua/validasi', [ValidasiKetuaController::class, 'showValidationPage'])->name('ketua.validasi');
-    // Route::post('/validasi/approve/{id}', [ValidasiKetuaController::class, 'approve']);
-    // Route::post('/validasi/disapprove/{id}', [ValidasiKetuaController::class, 'disapprove']);
-    Route::get('ketua/pembayaran', [PembayaranKetuaController::class, 'index'])->name('ketua.pembayaran.index');
-    Route::post('ketua/pembayaran/store', [PembayaranKetuaController::class, 'store'])->name('ketua.pembayaran.store');
+    Route::post('ketua/validasi', [ValidasiKetuaController::class, 'processValidation'])->name('ketua.processValidation');
+    Route::get('ketua/validasi/test', [ValidasiKetuaController::class, 'processValidation']);
+    Route::resource('KetuaPembayaran', PembayaranKetuaController::class);
+    Route::resource('KetuaWajib', PembayaranWajibKetuaController::class);
+    Route::resource('KetuaSukarela', PembayaranSukarelaKetuaController::class);
+    Route::resource('KetuaInformasi', InformasiKetuaController::class);
 });
 
 // Route untuk role 'wakil_ketua'
 Route::middleware(['auth', 'role:wakil_ketua'])->group(function () {
     Route::get('/wakil', [WakilController::class, 'index'])->name('wakil_ketua.dashboard');
-    Route::get('/wakil/peminjaman', [PeminjamanWakilController::class, 'index'])->name('wakil_ketua.peminjaman.index');
-    Route::get('/wakil/peminjaman/create', [PeminjamanWakilController::class, 'create'])->name('wakil_ketua.peminjaman.create');
-    Route::post('/wakil/peminjaman', [PeminjamanWakilController::class, 'store'])->name('wakil_ketua.peminjaman.store');
-    Route::get('/wakil/peminjaman/{id}/edit', [PeminjamanWakilController::class, 'edit'])->name('wakil_ketua.peminjaman.edit');
-    Route::put('/wakil/peminjaman/{id}', [PeminjamanWakilController::class, 'update'])->name('wakil_ketua.peminjaman.update');
-    Route::delete('/wakil/peminjaman/{id}', [PeminjamanWakilController::class, 'destroy'])->name('wakil_ketua.peminjaman.destroy');
-    Route::get('wakil/laporan', [LaporanWakilController::class, 'index'])->name('wakil_ketua.laporan.index');
+    Route::resource('WakilPeminjaman', PeminjamanWakilController::class);
+    Route::resource('WakilLaporan', LaporanWakilController::class);
+    Route::resource('WakilLaporanSukarela', LaporanWakilSukarelaController::class);
+    Route::resource('WakilLaporanWajib', LaporanWakilWajibController::class);
     Route::get('wakil/validasi', [ValidasiWakilController::class, 'showValidationPage'])->name('wakil_ketua.validasi');
-    // Route::post('/validasi/approve/{id}', [ValidasiWakilController::class, 'approve']);
-    // Route::post('/validasi/disapprove/{id}', [ValidasiWakilController::class, 'disapprove']);
-    Route::get('wakil/pembayaran', [PembayaranWakilController::class, 'index'])->name('wakil_ketua.pembayaran.index');
-    Route::post('wakil/pembayaran/store', [PembayaranWakilController::class, 'store'])->name('wakil_ketua.pembayaran.store');
+    Route::post('wakil/validasi', [ValidasiWakilController::class, 'processValidation'])->name('wakil_ketua.processValidation');
+    Route::get('wakil/validasi/test', [ValidasiWakilController::class, 'processValidation']);
+    Route::resource('WakilPembayaran', PembayaranWakilController::class);
+    Route::resource('WakilWajib', PembayaranWajibWakilController::class);
+    Route::resource('WakilSukarela', PembayaranSukarelaWakilController::class);
+    Route::resource('WakilInformasi', InformasiWakilController::class);
 });
 
 // Route untuk role 'anggota'

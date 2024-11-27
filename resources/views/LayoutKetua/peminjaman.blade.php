@@ -1,6 +1,9 @@
 @extends('LayoutKetua.index')
 
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="main-content">
     <div class="container">
         <div class="row justify-content-center">
@@ -14,7 +17,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('ketua.peminjaman.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('KetuaPeminjaman.store') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group row">
@@ -115,19 +118,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="unduhan_pengajuan" class="col-md-4 col-form-label text-md-right">{{ __('Unduhan Pengajuan') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="unduhan_pengajuan" type="file" class="form-control @error('unduhan_pengajuan') is-invalid @enderror" name="unduhan_pengajuan" value="{{ old('unduhan_pengajuan') }}">
-
-                                    @error('unduhan_pengajuan')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
 
                             <div class="form-group row">
                                 <label for="upload_pengajuan" class="col-md-4 col-form-label text-md-right">{{ __('Upload Pengajuan') }}</label>
@@ -149,7 +139,7 @@
                                         {{ __('Simpan') }}
                                     </button>
                                     <button type="submit" class="btn btn-primary">
-                                    <a href="{{ route('ketua.peminjaman.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
+                                    <a href="{{ route('KetuaPeminjaman.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
                                 </button>
                                 </div>
 

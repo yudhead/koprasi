@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Peminjaman;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ValidasiKetuaController extends Controller
 {
@@ -13,61 +14,40 @@ class ValidasiKetuaController extends Controller
         return view('LayoutKetua.validasi', compact('peminjamans'));
     }
     
-    public function approve($id, Request $request)
+    // Proses validasi peminjaman
+    public function processValidation(Request $request)
 {
-    $peminjaman = Peminjaman::findOrFail($id);
-    $role = $request->input('role');
+    $action = $request->input('action'); // 'approve' atau 'disapprove'
+    $selected = $request->input('selected'); // Array ID yang dipilih
 
-    // Set status persetujuan sesuai role yang mengajukan
-    switch ($role) {
-        case 'ketua':
-            $peminjaman->ketua_status = 'disetujui';
-            break;
-        case 'wakil_ketua':
-            $peminjaman->wakil_ketua_status = 'disetujui';
-            break;
-        case 'sekertaris':
-            $peminjaman->sekertaris_status = 'disetujui';
-            break;
-        case 'bendahara':
-            $peminjaman->bendahara_status = 'disetujui';
-            break;
-        case 'pengawas':
-            $peminjaman->pengawas_status = 'disetujui';
-            break;
+    if (!$selected || empty($selected)) {
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
     }
 
-    $peminjaman->save();
+    foreach ($selected as $id_peminjaman) {
+        $peminjaman = Peminjaman::findOrFail($id_peminjaman); // Gunakan id_peminjaman
+        $status = $action === 'approve' ? 'disetujui' : 'tidak disetujui';
 
-    return response()->json(['message' => 'Data disetujui'], 200);
-}
+        // Sesuaikan status berdasarkan peran yang sedang login
+        if (Auth::user()->role->name == 'bendahara') {
+            $peminjaman->bendahara_status = $status;
+        } elseif (Auth::user()->role->name == 'ketua') {
+            $peminjaman->ketua_status = $status;
+        } elseif (Auth::user()->role->name == 'wakil_ketua') {
+            $peminjaman->wakil_ketua_status = $status;
+        } elseif (Auth::user()->role->name == 'sekertaris') {
+            $peminjaman->sekertaris_status = $status;
+        } elseif (Auth::user()->role->name == 'pengawas') {
+            $peminjaman->pengawas_status = $status;
+        } else {
+            // Jika role tidak cocok
+            return redirect()->back()->with('error', 'Role Anda tidak sesuai untuk melakukan validasi.');
+        }
 
-public function disapprove($id, Request $request)
-{
-    $peminjaman = Peminjaman::findOrFail($id);
-    $role = $request->input('role');
-
-    // Set status penolakan sesuai role yang mengajukan
-    switch ($role) {
-        case 'ketua':
-            $peminjaman->ketua_status = 'tidak disetujui';
-            break;
-        case 'wakil_ketua':
-            $peminjaman->wakil_ketua_status = 'tidak disetujui';
-            break;
-        case 'sekertaris':
-            $peminjaman->sekertaris_status = 'tidak disetujui';
-            break;
-        case 'bendahara':
-            $peminjaman->bendahara_status = 'tidak disetujui';
-            break;
-        case 'pengawas':
-            $peminjaman->pengawas_status = 'tidak disetujui';
-            break;
+        $peminjaman->save();
     }
 
-    $peminjaman->save();
-
-    return response()->json(['message' => 'Data tidak disetujui'], 200);
+    return redirect()->route('ketua.validasi')->with('success', 'Status peminjaman berhasil diperbarui.');
 }
+
 }

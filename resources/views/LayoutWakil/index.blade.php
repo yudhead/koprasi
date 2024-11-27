@@ -21,11 +21,29 @@
             @else
                 <li><a href="{{ route('wakil_ketua.dashboard') }}"><i class="fa fa-user"></i> Wakil Ketua</a></li>
             @endif
-            <li><a href="{{ route('wakil_ketua.peminjaman.index') }}"><i class="fa fa-file"></i>Peminjaman</a></li>
-            <li><a href="{{ route('wakil_ketua.laporan.index') }}"><i class="fa fa-check"></i>Laporan</a></li>
+            <li><a href="{{ route('WakilPeminjaman.index') }}"><i class="fa fa-file"></i>Peminjaman</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-money"></i> Laporan <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" style="background-color: #868080;">
+                    <li><a href="{{ route('WakilLaporan.index') }}"><i class="fa fa-money"></i> Laporan Angsuran</a></li>
+                    <li><a href="{{ route('WakilLaporanWajib.index') }}"><i class="fa fa-money"></i> Laporan Simpanan Wajib</a></li>
+                    <li><a href="{{ route('WakilLaporanSukarela.index') }}"><i class="fa fa-money"></i> Laporan Simpanan Sukarela</a></li>
+                </ul>
+            </li>
             <li><a href="{{ route('wakil_ketua.validasi') }}"><i class="fa fa-check"></i>Validasi</a></li>
-            <li><a href="{{ route('wakil_ketua.pembayaran.index') }}"><i class="fa fa-money"></i>Pembayaran</a></li>
-            <li><a href="#"><i class="fa fa-info"></i>Informasi</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-money"></i> Pembayaran <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" style="background-color: #868080;">
+                    <li><a href="{{ route('WakilPembayaran.index') }}"><i class="fa fa-money"></i> Pembayaran Angsuran</a></li>
+                    <li><a href="{{ route('WakilWajib.index') }}"><i class="fa fa-money"></i> Pembayaran Simpanan Wajib</a></li>
+                    <li><a href="{{ route('WakilSukarela.index') }}"><i class="fa fa-money"></i> Pembayaran Simpanan Sukarela</a></li>
+                </ul>
+            </li>
+            <li><a href="{{ route('WakilInformasi.index') }}"><i class="fa fa-info"></i>Informasi</a></li>
             <li class="logout">
                 <form action="{{ route ('logout') }}" method="POST">
                     @csrf
@@ -39,7 +57,9 @@
             @yield('content')
         </div>
     </div>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script>
         // Mengaktifkan pjax untuk semua link kecuali logout
         $(document).pjax('a:not(.logout a)', '#pjax-container');
