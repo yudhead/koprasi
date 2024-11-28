@@ -22,30 +22,45 @@ class PeminjamanWakilController extends Controller
 
     public function store(Request $request)
 {
-    $user = auth()->user(); // Mendapatkan pengguna yang sedang login
+    $user = auth()->user();
 
+    // Validasi data
     $request->validate([
         'nama' => 'required',
         'nik' => 'required',
-        'tanggal_lahir' => 'required',
+        'tanggal_lahir' => 'required|date',
         'alamat' => 'required',
         'no_telp' => 'required',
-        'jumlah_pinjaman' => 'required|numeric',
-        'jumlah_angsuran' => 'required|numeric',
+        'jumlah_pinjaman' => 'required|numeric|min:1',
+        'jumlah_angsuran' => 'required|numeric|min:1',
         'unduhan_pengajuan' => 'nullable|mimes:pdf',
         'upload_pengajuan' => 'nullable|mimes:pdf',
+        'paket' => 'required|in:3,6,12',
     ]);
 
-    $peminjaman = new Peminjaman();
-    $peminjaman->nama = $request->input('nama');
-    $peminjaman->nik = $request->input('nik');
-    $peminjaman->tanggal_lahir = $request->input('tanggal_lahir');
-    $peminjaman->alamat = $request->input('alamat');
-    $peminjaman->no_telp = $request->input('no_telp');
-    $peminjaman->jumlah_pinjaman = $request->input('jumlah_pinjaman');
-    $peminjaman->jumlah_angsuran = $request->input('jumlah_angsuran');
-    $peminjaman->role = $user->role; // Menyimpan role pengguna
+    // Cek apakah ada cicilan aktif
+    $cicilanAktif = Peminjaman::where('nik', $request->nik)
+        ->where('status', 'aktif')
+        ->exists();
 
+    if ($cicilanAktif) {
+        return redirect()->back()->withErrors(['nik' => 'Lunasi peminjaman sebelumnya terlebih dahulu.'])->withInput();
+    }
+
+    // Simpan data peminjaman
+    $peminjaman = new Peminjaman();
+    $peminjaman->nama = $request->nama;
+    $peminjaman->nik = $request->nik;
+    $peminjaman->tanggal_lahir = $request->tanggal_lahir;
+    $peminjaman->alamat = $request->alamat;
+    $peminjaman->no_telp = $request->no_telp;
+    $peminjaman->jumlah_pinjaman = $request->jumlah_pinjaman;
+    $peminjaman->jumlah_angsuran = $request->jumlah_angsuran;
+    $peminjaman->paket = $request->paket;
+    $peminjaman->status = 'aktif'; // Status default untuk pinjaman baru
+    $peminjaman->role = $user->role;
+
+    // Upload file jika ada
     if ($request->hasFile('unduhan_pengajuan')) {
         $file = $request->file('unduhan_pengajuan');
         $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -59,10 +74,33 @@ class PeminjamanWakilController extends Controller
         $file->move(public_path('uploads'), $filename);
         $peminjaman->upload_pengajuan = 'uploads/' . $filename;
     }
-    
+
     $peminjaman->save();
 
     // Redirect dengan pesan sukses
     return redirect()->route('WakilPeminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan');
+}
+public function updateStatusPeminjaman($idPeminjaman)
+{
+    $peminjaman = Peminjaman::with('pembayarans')->find($idPeminjaman);
+
+    if (!$peminjaman) {
+        return;
+    }
+
+    // Hitung total pembayaran
+    $totalBayar = $peminjaman->pembayarans->sum('jumlah_bayar');
+
+    // Hitung kekurangan
+    $totalKekurangan = $peminjaman->jumlah_pinjaman - $totalBayar;
+
+    // Update status berdasarkan kekurangan
+    if ($totalKekurangan <= 0) {
+        $peminjaman->status = 'lunas';
+    } else {
+        $peminjaman->status = 'aktif';
+    }
+
+    $peminjaman->save();
 }
 }

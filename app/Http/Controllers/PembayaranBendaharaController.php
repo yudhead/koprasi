@@ -25,8 +25,12 @@ class PembayaranBendaharaController extends Controller
         // Authentication
         $user = auth()->user();
 
-        // Retrieve peminjaman data according to role
-        $peminjamans = Peminjaman::where('role', $user->role)->get();
+        $peminjamans = Peminjaman::where('role', $user->role)
+        ->where('status', 'aktif') // Status pinjaman aktif
+        ->whereDoesntHave('pembayaran', function ($query) {
+            $query->where('status', 'lunas'); // Pastikan pinjaman belum lunas
+        })
+        ->get();
 
         return view('LayoutBendahara.pembayaran', compact('peminjamans'));
     }
@@ -85,6 +89,13 @@ class PembayaranBendaharaController extends Controller
         }
 
         return redirect()->route('BendaharaPembayaran.index')->with('success', 'Pembayaran berhasil disimpan.');
+    }
+    public function getAngsuranKe($id_peminjaman)
+    {
+        $angsuran_sebelumnya = Pembayaran::where('id_peminjaman', $id_peminjaman)->count();
+        $angsuran_ke = $angsuran_sebelumnya + 1;
+
+        return response()->json(['angsuran_ke' => $angsuran_ke]);
     }
 
 }

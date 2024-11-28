@@ -13,8 +13,8 @@
         @method('PUT')
 
         <div class="form-group">
-            <label for="nama">Nama</label>
-            <input type="text" name="nama" id="nama" value="{{ $anggota->nama }}" required>
+            <label for="name">Nama</label>
+            <input type="text" name="name" id="name" value="{{ $anggota->name }}" required>
         </div>
 
         <div class="form-group">
@@ -23,21 +23,22 @@
         </div>
 
         <div class="form-group">
-            <label for="role">Role</label>
-            <select name="role" id="role" required>
-                <option value="Sekretaris" {{ $anggota->role == 'Sekretaris' ? 'selected' : '' }}>Sekretaris</option>
-                <option value="Pengurus" {{ $anggota->role == 'Pengurus' ? 'selected' : '' }}>Pengurus</option>
-                <option value="Anggota" {{ $anggota->role == 'Anggota' ? 'selected' : '' }}>Anggota</option>
+            <label for="role_id">Role</label>
+            <select name="role_id" id="role_id" required>
+                <option value="1" {{ $anggota->role_id == 1 ? 'selected' : '' }}>Sekretaris</option>
+                <option value="2" {{ $anggota->role_id == 2 ? 'selected' : '' }}>Pengurus</option>
+                <option value="3" {{ $anggota->role_id == 3 ? 'selected' : '' }}>Anggota</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" value="{{ $anggota->password }}" required>
+            <input type="password" name="password" id="password" placeholder="Kosongkan jika tidak ingin mengubah">
         </div>
 
         <button type="submit" class="btn-update">Update Anggota</button>
         <a href="{{ route('anggota.index') }}" class="btn-back">Kembali</a>
     </form>
+
 </div>
 @endsection

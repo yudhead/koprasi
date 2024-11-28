@@ -1,7 +1,5 @@
 @extends('LayoutBendahara.index')
 
-@section('content')
-
 <div class="main-content">
     <div class="container">
         <h2>Data Laporan Pembayaran Angsuran</h2>
@@ -13,7 +11,7 @@
         @endif
 
         <!-- Form Pencarian -->
-        <form action="{{ route('BendaharaLaporan.index') }}" method="GET" class="form-inline mb-3">
+        <form action="{{ route('laporan.index') }}" method="GET" class="form-inline mb-3">
             <input type="text" name="search" class="form-control mr-2" placeholder="Cari Nama atau NIK" value="{{ request('search') }}">
             <button type="submit" class="btn btn-primary">Cari</button>
         </form>

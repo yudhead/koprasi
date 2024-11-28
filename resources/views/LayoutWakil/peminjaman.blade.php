@@ -20,117 +20,54 @@
                         <form method="POST" action="{{ route('WakilPeminjaman.store') }}" enctype="multipart/form-data">
                             @csrf
 
-                            <div class="form-group row">
-                                <label for="nama" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="nama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama') }}" required autocomplete="nama" autofocus>
-
-                                    @error('nama')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="nama">Nama</label>
+                                <input type="text" name="nama" class="form-control" id="nama" required>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="nik" class="col-md-4 col-form-label text-md-right">{{ __('NIK') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="nik" type="text" class="form-control @error('nik') is-invalid @enderror" name="nik" value="{{ old('nik') }}" required autocomplete="nik">
-
-                                    @error('nik')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="nik">NIK</label>
+                                <input type="text" name="nik" class="form-control" id="nik" required>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="tanggal_lahir" class="col-md-4 col-form-label text-md-right">{{ __('Tanggal Lahir') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="tanggal_lahir" type="date" class="form-control @error('tanggal_lahir') is-invalid @enderror" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required autocomplete="tanggal_lahir">
-
-                                    @error('tanggal_lahir')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="tanggal_lahir">Tanggal Lahir</label>
+                                <input type="date" name="tanggal_lahir" class="form-control" id="tanggal_lahir" required>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="alamat" class="col-md-4 col-form-label text-md-right">{{ __('Alamat') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="alamat" type="text" class="form-control @error('alamat') is-invalid @enderror" name="alamat" value="{{ old('alamat') }}" required autocomplete="alamat">
-
-                                    @error('alamat')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="alamat">Alamat</label>
+                                <textarea name="alamat" class="form-control" id="alamat" required></textarea>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="no_telp" class="col-md-4 col-form-label text-md-right">{{ __('No. Telp') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="no_telp" type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" value="{{ old('no_telp') }}" required autocomplete="no_telp">
-
-                                    @error('no_telp')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="no_telp">No. Telepon</label>
+                                <input type="text" name="no_telp" class="form-control" id="no_telp" required>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="jumlah_pinjaman" class="col-md-4 col-form-label text-md-right">{{ __('Jumlah Pinjaman') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="jumlah_pinjaman" type="number" class="form-control @error('jumlah_pinjaman') is-invalid @enderror" name="jumlah_pinjaman" value="{{ old('jumlah_pinjaman') }}" required autocomplete="jumlah_pinjaman">
-
-                                    @error('jumlah_pinjaman')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="paket">Pilih Paket</label>
+                                <select name="paket" id="paket" class="form-control" required>
+                                    <option value="">Pilih Paket</option>
+                                    <option value="3">3 Bulan</option>
+                                    <option value="6">6 Bulan</option>
+                                    <option value="12">12 Bulan</option>
+                                </select>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="jumlah_angsuran" class="col-md-4 col-form-label text-md-right">{{ __('Jumlah Angsuran') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="jumlah_angsuran" type="number" class="form-control @error('jumlah_angsuran') is-invalid @enderror" name="jumlah_angsuran" value="{{ old('jumlah_angsuran') }}" required autocomplete="jumlah_angsuran">
-
-                                    @error('jumlah_angsuran')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
+                                <input type="number" name="jumlah_pinjaman" class="form-control" id="jumlah_pinjaman" readonly required>
                             </div>
 
+                            <div class="form-group">
+                                <label for="jumlah_angsuran">Jumlah Angsuran</label>
+                                <input type="number" name="jumlah_angsuran" class="form-control" id="jumlah_angsuran" readonly required>
+                            </div>
 
-                            <div class="form-group row">
-                                <label for="upload_pengajuan" class="col-md-4 col-form-label text-md-right">{{ __('Upload Pengajuan') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="upload_pengajuan" type="file" class="form-control @error('upload_pengajuan') is-invalid @enderror" name="upload_pengajuan" value="{{ old('upload_pengajuan') }}">
-
-                                    @error('upload_pengajuan')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="form-group">
+                                <label for="upload_pengajuan">Upload Pengajuan</label>
+                                <input type="file" name="upload_pengajuan" class="form-control" id="upload_pengajuan" accept=".pdf">
                             </div>
 
                             <div class="form-group row mb-0">
@@ -148,7 +85,25 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+<script>
+    document.getElementById('paket').addEventListener('change', function() {
+        const paket = this.value;
+        let jumlahPinjaman = 0;
+        let jumlahAngsuran = 0;
+
+        if (paket === '3') {
+            jumlahPinjaman = 1500000;
+            jumlahAngsuran = 500000;
+        } else if (paket === '6') {
+            jumlahPinjaman = 3000000;
+            jumlahAngsuran = 500000;
+        } else if (paket === '12') {
+            jumlahPinjaman = 10000000;
+            jumlahAngsuran = 833000;
+        }
+
+        document.getElementById('jumlah_pinjaman').value = jumlahPinjaman;
+        document.getElementById('jumlah_angsuran').value = jumlahAngsuran;
+    });
+</script>
 @endsection

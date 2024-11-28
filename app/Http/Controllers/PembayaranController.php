@@ -101,8 +101,6 @@ class PembayaranController extends Controller
         return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil disimpan.');
     }
 
-<<<<<<< HEAD
-=======
 
     // Method tambahan untuk menghitung angsuran_ke
     public function getAngsuranKe($id_peminjaman)
@@ -112,5 +110,4 @@ class PembayaranController extends Controller
 
         return response()->json(['angsuran_ke' => $angsuran_ke]);
     }
->>>>>>> 1eab40175923cfd3547ad0890480e0a8f9057508
 }

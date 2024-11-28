@@ -32,7 +32,7 @@
                     <li><a href="{{ route('LaporanSukarela.index') }}"><i class="fa fa-money"></i> Laporan Simpanan Sukarela</a></li>
                 </ul>
             </li>
-            <li><a href="{{ route('sekertaris.validasi') }}"><i class="fa fa-check"></i> Validasi</a></li>
+            <li><a href="{{ route('validasi') }}"><i class="fa fa-check"></i> Validasi</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-money"></i> Pembayaran <span class="caret"></span>

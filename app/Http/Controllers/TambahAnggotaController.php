@@ -54,23 +54,23 @@ class TambahAnggotaController extends Controller
     public function update(Request $request, $id) {
         // Validasi input
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:user,id,' . $id, // Mengabaikan email anggota ini sendiri
-            'password' => 'nullable|string|min:8', // Password opsional saat update
-            'role' => 'required|string',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
-        $anggota = user::findOrFail($id);
+        $anggota = User::findOrFail($id);
 
         // Update data anggota
         $anggota->update([
-            'nama' => $request->nama,
+            'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $anggota->password, // Jika password diisi, enkripsi, jika tidak biarkan tetap
-            'role' => $request->role,
+            'password' => $request->password ? Hash::make($request->password) : $anggota->password,
+            'role_id' => $request->role_id,
         ]);
 
-        return redirect('LayoutSekertaris.anggota')->with('success', 'user berhasil diperbarui.');
+        return redirect()->route('anggota.index')->with('success', 'User berhasil diperbarui.');
     }
 
     public function destroy($id) {
